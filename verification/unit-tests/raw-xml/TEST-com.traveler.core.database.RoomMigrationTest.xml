@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.traveler.core.database.RoomMigrationTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-08-24T20:16:01" hostname="DESKTOP-KCRJAHI" time="0.737">
+  <properties/>
+  <testcase name="testMigration1To2_UpgradesTablesAndPreservesData" classname="com.traveler.core.database.RoomMigrationTest" time="0.163"/>
+  <testcase name="testMigration1To5_FullChainPreservesAllFields" classname="com.traveler.core.database.RoomMigrationTest" time="0.181"/>
+  <testcase name="testMigration3To4_AddsVisitAndMovementTimezoneColumns" classname="com.traveler.core.database.RoomMigrationTest" time="0.178"/>
+  <testcase name="testMigration4To5_AddsGeometryProvenanceAndDayAssignmentFields" classname="com.traveler.core.database.RoomMigrationTest" time="0.215"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

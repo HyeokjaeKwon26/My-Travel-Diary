@@ -1,0 +1,10 @@
+=== Memory Report: peak-timeshape ===
+Device Model: sdk_gphone64_x86_64 (emu64xa)
+Android SDK: 36
+ActivityManager memoryClass: 192MB (normal heap)
+ActivityManager largeMemoryClass: 576MB
+Java Heap Allocated: 179MB (188661632 bytes)
+Java Heap Total: 187MB (196984704 bytes)
+Java Heap Max Limit: 192MB (201326592 bytes)
+Native Heap Allocated: 5MB (6012976 bytes)
+=========================================

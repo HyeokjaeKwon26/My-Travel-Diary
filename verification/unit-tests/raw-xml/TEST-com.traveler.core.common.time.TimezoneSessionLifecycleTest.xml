@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.traveler.core.common.time.TimezoneSessionLifecycleTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-08-24T20:15:54" hostname="DESKTOP-KCRJAHI" time="0.167">
+  <properties/>
+  <testcase name="testEngineNotInitializedByDefault" classname="com.traveler.core.common.time.TimezoneSessionLifecycleTest" time="0.0"/>
+  <testcase name="testReleaseCalledOnImportFailureOrMalformedJson" classname="com.traveler.core.common.time.TimezoneSessionLifecycleTest" time="0.099"/>
+  <testcase name="testReleaseCalledOnSuccessfulImport" classname="com.traveler.core.common.time.TimezoneSessionLifecycleTest" time="0.066"/>
+  <testcase name="testConcurrentSessionAcquireAndRelease" classname="com.traveler.core.common.time.TimezoneSessionLifecycleTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

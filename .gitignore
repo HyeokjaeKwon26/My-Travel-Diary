@@ -1,0 +1,40 @@
+# Gradle and Build Cache
+.gradle/
+build/
+**/build/
+bin/
+gen/
+out/
+
+# Android Studio / IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+.idea_modules/
+
+# Local configuration and keys
+local.properties
+keystore.properties
+*.jks
+*.keystore
+
+# Build artifacts & packages
+*.apk
+*.ap_
+*.aab
+*.zip
+*.tar.gz
+app-debug.apk
+Traveler_Pass*
+
+# System & OS Files
+.DS_Store
+Thumbs.db
+captures/
+.externalNativeBuild/
+.cxx/
+*.log
+
+# Kotlin compilation cache
+.kotlin/

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.traveler.core.media.PhotoTimestampResolverTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-08-24T20:16:05" hostname="DESKTOP-KCRJAHI" time="0.002">
+  <properties/>
+  <testcase name="testResolve_MediaStoreDateTaken" classname="com.traveler.core.media.PhotoTimestampResolverTest" time="0.0"/>
+  <testcase name="testResolve_ExifWithOffset" classname="com.traveler.core.media.PhotoTimestampResolverTest" time="0.001"/>
+  <testcase name="testResolve_UnknownTimestamp_ReturnsNull_NeverSystemCurrentTime" classname="com.traveler.core.media.PhotoTimestampResolverTest" time="0.0"/>
+  <testcase name="testResolve_FilenameWithoutContextOrFileTime_ReturnsUnknown" classname="com.traveler.core.media.PhotoTimestampResolverTest" time="0.0"/>
+  <testcase name="testResolve_FilenameFallback_WhenExifMissing" classname="com.traveler.core.media.PhotoTimestampResolverTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

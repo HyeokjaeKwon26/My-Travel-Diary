@@ -1,0 +1,57 @@
+My Travel Diary Pass 21 Final Verification Metadata
+Build Date (UTC): 2026-08-24T20:22:36Z
+Source Manifest SHA-256: 1550bbe523fe11f9db9b1b3f30c1293b172ea80cc290ee96d16134f8a64033ab
+Architecture: 100% Offline Custom Canvas Vector Travel Visualization
+Permissions:
+  - android.permission.INTERNET: ABSENT
+  - android.permission.ACCESS_NETWORK_STATE: ABSENT
+Application Configuration:
+  - largeHeap: ABSENT (Normal 192MB Heap Verified)
+Basemap:
+  - Dataset: My Travel Diary Comprehensive Offline Vector Basemap (Natural Earth 1:110m + Regional Water Channels)
+  - Integrity Check: PASS
+TimeShape Offline Timezone Engine:
+  - Worldwide Coverage: 100% Offline via compressed polygon boundary index
+  - Production Lifecycle: Session-scoped during import, released immediately post-persistence, 0MB retained at idle
+  - Resident Memory Profile:
+    === Memory Report: after-opening-saved-trip ===
+    ActivityManager memoryClass: 192MB (normal heap)
+    Java Heap Allocated: 3MB (3664448 bytes)
+    === Memory Report: after-playback-preparation ===
+    ActivityManager memoryClass: 192MB (normal heap)
+    Java Heap Allocated: 3MB (3844672 bytes)
+    === Memory Report: after-release-gc ===
+    ActivityManager memoryClass: 192MB (normal heap)
+    Java Heap Allocated: 4MB (4569664 bytes)
+    === Memory Report: after-timeshape ===
+    ActivityManager memoryClass: 192MB (normal heap)
+    Java Heap Allocated: 178MB (187563808 bytes)
+    === Memory Report: before-timeshape ===
+    ActivityManager memoryClass: 192MB (normal heap)
+    Java Heap Allocated: 1MB (2041344 bytes)
+    === Memory Report: peak-timeshape ===
+    ActivityManager memoryClass: 192MB (normal heap)
+    Java Heap Allocated: 179MB (188661632 bytes)
+    === Memory Report: post-import ===
+    ActivityManager memoryClass: 192MB (normal heap)
+    Java Heap Allocated: 4MB (4569664 bytes)
+JVM Unit Tests:
+  - Tests Executed: 252
+  - Passed: 252
+  - Failures: 0
+  - Skipped: 0
+Connected Android Instrumentation Tests:
+  - Device: sdk_gphone64_x86_64
+  - API Level: 36
+  - Tests Executed: 8
+  - Passed: 8
+  - Failures: 0
+Android Lint:
+  - Errors: 0
+  - Warnings: 74
+Artifacts:
+  - File: app-debug.apk
+  - Size: 50327689 bytes
+  - SHA-256: 9071a0b2df038378fcf9a72eddb50cb652b81b7a9e468b7a4b628309ed8ae484
+Target Platform: Android 16 / API 36
+Readiness: BETA / PERSONAL USE READY

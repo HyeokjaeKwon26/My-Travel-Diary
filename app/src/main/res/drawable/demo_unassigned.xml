@@ -1,0 +1,36 @@
+﻿<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="400dp"
+    android:height="250dp"
+    android:viewportWidth="400"
+    android:viewportHeight="250">
+  <!-- Warm Background -->
+  <path
+      android:pathData="M0,0h400v250h-400z"
+      android:fillColor="#FEF3C7"/>
+  <!-- Table surface -->
+  <path
+      android:pathData="M0,180h400v70h-400z"
+      android:fillColor="#78350F"/>
+  <!-- Plate / Saucer -->
+  <path
+      android:pathData="M130,200h140a10,10 0 0,1 10,10a10,10 0 0,1 -10,10h-140a10,10 0 0,1 -10,-10a10,10 0 0,1 10,-10"
+      android:fillColor="#E2E8F0"/>
+  <!-- Coffee Cup -->
+  <path
+      android:pathData="M150,130h100v50a30,30 0 0,1 -30,30h-40a30,30 0 0,1 -30,-30z"
+      android:fillColor="#FFFFFF"/>
+  <!-- Handle -->
+  <path
+      android:pathData="M250,145h15a15,15 0 0,1 15,15a15,15 0 0,1 -15,15h-15"
+      android:strokeColor="#FFFFFF"
+      android:strokeWidth="6"/>
+  <!-- Coffee liquid -->
+  <path
+      android:pathData="M155,140h90a5,5 0 0,1 5,5a5,5 0 0,1 -5,5h-90a5,5 0 0,1 -5,-5a5,5 0 0,1 5,-5"
+      android:fillColor="#451A03"/>
+  <!-- Steam lines -->
+  <path
+      android:pathData="M180,110 Q190,95 180,80M200,115 Q210,95 200,75M220,110 Q230,95 220,80"
+      android:strokeColor="#94A3B8"
+      android:strokeWidth="3"/>
+</vector>

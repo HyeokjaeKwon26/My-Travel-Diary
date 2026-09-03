@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuite name="com.traveler.AndroidInstrumentationTests" tests="8" failures="0" errors="0" skipped="0">
+  <properties>
+    <property name="device" value="sdk_gphone64_x86_64" />
+    <property name="api" value="36" />
+  </properties>
+  <testcase name="migrate2To5_fullChainMigrationPreservesData" classname="com.traveler.core.database.RoomMigrationAndroidTest" />
+  <testcase name="migrate4To5_containsGeometryProvenanceAndDayAssignment" classname="com.traveler.core.database.RoomMigrationAndroidTest" />
+  <testcase name="migrate3To5_multiVersionMigrationPreservesData" classname="com.traveler.core.database.RoomMigrationAndroidTest" />
+  <testcase name="migrate3To4_containsTimezoneColumns" classname="com.traveler.core.database.RoomMigrationAndroidTest" />
+  <testcase name="migrate2To3_containsCaptureTimezoneId" classname="com.traveler.core.database.RoomMigrationAndroidTest" />
+  <testcase name="timeShape_realisticStressTest_underNormalHeap_succeedsAndReclaimsMemory" classname="com.traveler.core.common.time.TimeShapeAndroidTest" />
+  <testcase name="testRenderAndCaptureGlobalMapEvidenceOnAndroid" classname="com.traveler.feature.map.renderer.GlobalMapRenderingAndroidTest" />
+  <testcase name="captureCurrentRunUiEvidence" classname="com.traveler.feature.ui.TravelerUiScreenshotsAndroidTest" />
+</testsuite>

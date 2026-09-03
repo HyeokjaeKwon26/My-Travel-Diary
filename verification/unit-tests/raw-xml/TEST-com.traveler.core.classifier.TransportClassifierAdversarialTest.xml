@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.traveler.core.classifier.TransportClassifierAdversarialTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-08-24T20:15:50" hostname="DESKTOP-KCRJAHI" time="0.026">
+  <properties/>
+  <testcase name="testHighSpeedRail_ClassifiedAsTrain" classname="com.traveler.core.classifier.TransportClassifierAdversarialTest" time="0.0"/>
+  <testcase name="testStationaryGpsJitter_DoesNotClassifyAsWalk" classname="com.traveler.core.classifier.TransportClassifierAdversarialTest" time="0.025"/>
+  <testcase name="testImpossibleGpsSpike_DoesNotClassifyAsAirplane" classname="com.traveler.core.classifier.TransportClassifierAdversarialTest" time="0.001"/>
+  <testcase name="testShortHighwayTripNearAirport_ClassifiedAsCarNotFlight" classname="com.traveler.core.classifier.TransportClassifierAdversarialTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

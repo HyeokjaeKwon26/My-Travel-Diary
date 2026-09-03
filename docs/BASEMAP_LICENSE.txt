@@ -1,0 +1,35 @@
+Traveler Schematic World Basemap License & Dedication
+======================================================
+
+The vector land polygons and schematic world basemap geometry contained in:
+- app/src/main/assets/basemap_world.json
+- tools/generate_basemap.py
+
+are dedicated to the Public Domain under the Creative Commons CC0 1.0 Universal
+(CC0 1.0) Public Domain Dedication.
+
+Statement of Purpose:
+---------------------
+The laws of most jurisdictions throughout the world automatically confer
+exclusive Copyright and Related Rights upon the creator and subsequent owner(s)
+of an original work of authorship and/or a database.
+
+Certain owners wish to permanently relinquish those rights to a work for the
+purpose of contributing to a commons of creative, cultural and scientific
+works that the public can reliably and without fear of later claims of
+infringement build upon, modify, incorporate in other works, reuse and
+redistribute as freely as possible in any form whatsoever and for any purposes,
+including without limitation commercial purposes.
+
+Affirmation of CC0 1.0:
+-----------------------
+To the greatest extent permitted by, but not in contravention of, applicable
+law, the authors and contributors of the Traveler project hereby openly,
+fully, permanently, irrevocably and unconditionally waive, abandon, and surrender
+all Copyright and Related Rights and associated claims and causes of action,
+whether now known or unknown (including existing as well as future claims and
+causes of action), in the Traveler Schematic World Basemap geometry.
+
+No copyright or intellectual property restrictions are attached to this basemap.
+It is completely free to use, distribute, modify, and incorporate for personal,
+academic, or commercial offline visualization.

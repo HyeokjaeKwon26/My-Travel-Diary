@@ -1,0 +1,5 @@
+# Traveler Local Configuration
+#
+# Traveler is a 100% offline, local-first travel diary application.
+# It uses a custom built-in vector canvas travel visualization renderer and bundled Traveler Schematic World Basemap (CC0).
+# ZERO Google Maps API key, Mapbox, or remote map tile servers are required.

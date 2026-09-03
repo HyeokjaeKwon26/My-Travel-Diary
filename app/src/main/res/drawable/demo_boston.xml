@@ -1,0 +1,29 @@
+﻿<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="400dp"
+    android:height="250dp"
+    android:viewportWidth="400"
+    android:viewportHeight="250">
+  <path
+      android:pathData="M0,0h400v250h-400z"
+      android:fillColor="#1E293B"/>
+  <path
+      android:pathData="M0,0h400v160h-400z"
+      android:fillColor="#334155"/>
+  <!-- Sun/Moon -->
+  <path
+      android:pathData="M320,60a25,25 0 1,0 50,0a25,25 0 1,0 -50,0"
+      android:fillColor="#FBBF24"/>
+  <!-- Skyline -->
+  <path
+      android:pathData="M30,160 L30,110 L60,110 L60,160 L70,160 L70,80 L110,80 L110,160 L120,160 L120,60 L145,60 L145,160 L155,160 L155,100 L190,100 L190,160 L210,160 L210,50 L240,50 L240,160 L250,160 L250,90 L290,90 L290,160 L310,160 L310,120 L350,120 L350,160 Z"
+      android:fillColor="#0F172A"/>
+  <!-- Water -->
+  <path
+      android:pathData="M0,160h400v90h-400z"
+      android:fillColor="#0284C7"/>
+  <!-- Harbor wave highlights -->
+  <path
+      android:pathData="M20,180h120M180,195h160M60,220h220"
+      android:strokeColor="#38BDF8"
+      android:strokeWidth="3"/>
+</vector>

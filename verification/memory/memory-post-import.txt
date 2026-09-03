@@ -1,0 +1,10 @@
+=== Memory Report: post-import ===
+Device Model: sdk_gphone64_x86_64 (emu64xa)
+Android SDK: 36
+ActivityManager memoryClass: 192MB (normal heap)
+ActivityManager largeMemoryClass: 576MB
+Java Heap Allocated: 4MB (4569664 bytes)
+Java Heap Total: 5MB (6005503 bytes)
+Java Heap Max Limit: 192MB (201326592 bytes)
+Native Heap Allocated: 6MB (6843872 bytes)
+=========================================

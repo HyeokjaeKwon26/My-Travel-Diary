@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.traveler.feature.map.PlaybackScreenAwakeTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-08-24T20:16:09" hostname="DESKTOP-KCRJAHI" time="3.076">
+  <properties/>
+  <testcase name="testKeepScreenOn_lifecycleTransitions" classname="com.traveler.feature.map.PlaybackScreenAwakeTest" time="3.076"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

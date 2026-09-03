@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.traveler.core.database.RoomPersistenceV5Test" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-08-24T20:16:02" hostname="DESKTOP-KCRJAHI" time="0.614">
+  <properties/>
+  <testcase name="exclusiveMediaParent_updateMediaVisitAndReconstructionDefense" classname="com.traveler.core.database.RoomPersistenceV5Test" time="0.211"/>
+  <testcase name="deleteTrip_atomicallyDeletesTripAndAllChildRows_andPreservesOtherTrips" classname="com.traveler.core.database.RoomPersistenceV5Test" time="0.153"/>
+  <testcase name="saveAndReloadTrip_preservesGeometryProvenanceAndMediaDayAssignment" classname="com.traveler.core.database.RoomPersistenceV5Test" time="0.099"/>
+  <testcase name="cleanOrphanTripData_removesOnlyOrphansAndPreservesValidData" classname="com.traveler.core.database.RoomPersistenceV5Test" time="0.151"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

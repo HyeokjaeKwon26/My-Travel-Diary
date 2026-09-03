@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.traveler.core.common.time.ColdStartSavedTripTimeShapeTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-08-24T20:15:50" hostname="DESKTOP-KCRJAHI" time="0.252">
+  <properties/>
+  <testcase name="testSavedTripViewing_DoesNotInitializeTimeShapeEngine" classname="com.traveler.core.common.time.ColdStartSavedTripTimeShapeTest" time="0.252"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

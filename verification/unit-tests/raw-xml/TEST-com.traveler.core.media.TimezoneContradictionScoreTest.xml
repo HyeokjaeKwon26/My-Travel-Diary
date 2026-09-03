@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.traveler.core.media.TimezoneContradictionScoreTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-08-24T20:16:05" hostname="DESKTOP-KCRJAHI" time="0.001">
+  <properties/>
+  <testcase name="timezoneContradiction_withKnownVisitTimezone_mustNotReceivePositiveScore" classname="com.traveler.core.media.TimezoneContradictionScoreTest" time="0.0"/>
+  <testcase name="p0_04_authoritativeDirectGpsTimezone_onDstGap_mustReturnUnknownAndNotFallbackToTripZones" classname="com.traveler.core.media.TimezoneContradictionScoreTest" time="0.0"/>
+  <testcase name="p1_05_singleCandidateZone_withKnownTimezoneContradiction_mustInvalidateContextAndReturnUnknown" classname="com.traveler.core.media.TimezoneContradictionScoreTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

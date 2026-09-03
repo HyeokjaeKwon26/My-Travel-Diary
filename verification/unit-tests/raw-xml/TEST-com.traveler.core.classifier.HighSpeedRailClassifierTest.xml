@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.traveler.core.classifier.HighSpeedRailClassifierTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-08-24T20:15:50" hostname="DESKTOP-KCRJAHI" time="0.114">
+  <properties/>
+  <testcase name="testTokyoOsakaShinkansen_IsClassifiedAsTrain" classname="com.traveler.core.classifier.HighSpeedRailClassifierTest" time="0.106"/>
+  <testcase name="testBeijingShanghaiHighSpeedRail_IsClassifiedAsTrain_NotAirplane" classname="com.traveler.core.classifier.HighSpeedRailClassifierTest" time="0.0"/>
+  <testcase name="testTranscontinentalFlight_IsClassifiedAsAirplane" classname="com.traveler.core.classifier.HighSpeedRailClassifierTest" time="0.006"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

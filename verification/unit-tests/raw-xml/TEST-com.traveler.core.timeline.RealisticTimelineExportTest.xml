@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.traveler.core.timeline.RealisticTimelineExportTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-08-24T20:16:07" hostname="DESKTOP-KCRJAHI" time="0.02">
+  <properties/>
+  <testcase name="testFixtureF_CombinedFullDay" classname="com.traveler.core.timeline.RealisticTimelineExportTest" time="0.004"/>
+  <testcase name="testFixtureD_TimelinePath_DurationOffset" classname="com.traveler.core.timeline.RealisticTimelineExportTest" time="0.004"/>
+  <testcase name="testFixtureE_RawSignals_CapitalLatLng" classname="com.traveler.core.timeline.RealisticTimelineExportTest" time="0.003"/>
+  <testcase name="testFixtureC_TimelinePath_PointAndTime" classname="com.traveler.core.timeline.RealisticTimelineExportTest" time="0.003"/>
+  <testcase name="testFixtureB_ActivityWithStartEndLatLng_NoSimplifiedRawPath" classname="com.traveler.core.timeline.RealisticTimelineExportTest" time="0.003"/>
+  <testcase name="testFixtureA_SemanticVisit_LatLng" classname="com.traveler.core.timeline.RealisticTimelineExportTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

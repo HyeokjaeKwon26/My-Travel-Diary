@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.traveler.core.timeline.DateRangeFilterIntervalTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-08-24T20:16:06" hostname="DESKTOP-KCRJAHI" time="0.0">
+  <properties/>
+  <testcase name="testMovement_StartsDuringAndEndsAfter" classname="com.traveler.core.timeline.DateRangeFilterIntervalTest" time="0.0"/>
+  <testcase name="testMultiDayHotelStay_EnclosingSelectedDate" classname="com.traveler.core.timeline.DateRangeFilterIntervalTest" time="0.0"/>
+  <testcase name="testOvernightFlight_StartsBeforeAndEndsDuring" classname="com.traveler.core.timeline.DateRangeFilterIntervalTest" time="0.0"/>
+  <testcase name="testExactBoundaryContact" classname="com.traveler.core.timeline.DateRangeFilterIntervalTest" time="0.0"/>
+  <testcase name="testNoOverlap_BeforeAndAfter" classname="com.traveler.core.timeline.DateRangeFilterIntervalTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

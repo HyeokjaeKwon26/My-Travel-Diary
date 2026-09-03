@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.traveler.scenarios.SyntheticScenariosTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-08-24T20:16:15" hostname="DESKTOP-KCRJAHI" time="1.976">
+  <properties/>
+  <testcase name="testScenarioA_LocalDayTrip" classname="com.traveler.scenarios.SyntheticScenariosTest" time="1.976"/>
+  <testcase name="testScenarioE_AmbiguousTransport" classname="com.traveler.scenarios.SyntheticScenariosTest" time="0.0"/>
+  <testcase name="testScenarioB_InternationalFlight" classname="com.traveler.scenarios.SyntheticScenariosTest" time="0.0"/>
+  <testcase name="testScenarioCD_WeakMetadataFallback" classname="com.traveler.scenarios.SyntheticScenariosTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

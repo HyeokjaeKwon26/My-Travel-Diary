@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.traveler.domain.usecase.MediaDateFirstDayAssignmentTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-08-24T20:16:09" hostname="DESKTOP-KCRJAHI" time="0.003">
+  <properties/>
+  <testcase name="crossTimezoneMovement_arrivalPhotoAppearsOnArrivalDateWithoutDistanceDuplication" classname="com.traveler.domain.usecase.MediaDateFirstDayAssignmentTest" time="0.001"/>
+  <testcase name="emptySelectedDay_persistsAcrossReconstruction" classname="com.traveler.domain.usecase.MediaDateFirstDayAssignmentTest" time="0.0"/>
+  <testcase name="crossMidnightVisit_photoAppearsOnAssignedDayNotStartDay" classname="com.traveler.domain.usecase.MediaDateFirstDayAssignmentTest" time="0.001"/>
+  <testcase name="photoCountInvariant_isStrictlyPreserved" classname="com.traveler.domain.usecase.MediaDateFirstDayAssignmentTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

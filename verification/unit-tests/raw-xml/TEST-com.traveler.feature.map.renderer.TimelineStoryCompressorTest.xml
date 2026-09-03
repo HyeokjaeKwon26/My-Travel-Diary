@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.traveler.feature.map.renderer.TimelineStoryCompressorTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-08-24T20:16:14" hostname="DESKTOP-KCRJAHI" time="0.4">
+  <properties/>
+  <testcase name="testPass203_caseB_syracuseProgression_strictlyMonotonicStoryTimeline" classname="com.traveler.feature.map.renderer.TimelineStoryCompressorTest" time="0.027"/>
+  <testcase name="testPass203_caseA_erieNiagaraProgression_noRewindToErieAfterNiagara" classname="com.traveler.feature.map.renderer.TimelineStoryCompressorTest" time="0.01"/>
+  <testcase name="seedTestTripDuration_isProperlyCalculated" classname="com.traveler.feature.map.renderer.TimelineStoryCompressorTest" time="0.356"/>
+  <testcase name="testPass203_caseC_multiPhotoVisitAnchor_markerRemainsStationaryDuringDwell" classname="com.traveler.feature.map.renderer.TimelineStoryCompressorTest" time="0.001"/>
+  <testcase name="largeTripWith100Visits_strictlyAdheresToTargetStoryDuration" classname="com.traveler.feature.map.renderer.TimelineStoryCompressorTest" time="0.006"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

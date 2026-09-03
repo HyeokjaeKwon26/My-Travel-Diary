@@ -1,0 +1,29 @@
+﻿<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="400dp"
+    android:height="250dp"
+    android:viewportWidth="400"
+    android:viewportHeight="250">
+  <!-- Sky -->
+  <path
+      android:pathData="M0,0h400v250h-400z"
+      android:fillColor="#0284C7"/>
+  <!-- Atmosphere gradient -->
+  <path
+      android:pathData="M0,150h400v100h-400z"
+      android:fillColor="#38BDF8"/>
+  <!-- Clouds -->
+  <path
+      android:pathData="M-20,180 Q40,150 100,180 Q160,140 220,180 Q280,150 340,180 Q400,160 440,180 L440,250 L-20,250 Z"
+      android:fillColor="#F8FAFC"/>
+  <!-- Wing -->
+  <path
+      android:pathData="M0,120 L280,60 L290,50 L270,70 L180,250 L0,250 Z"
+      android:fillColor="#E2E8F0"/>
+  <!-- Wing shadow / edge -->
+  <path
+      android:pathData="M270,70 L290,50 L295,45 L285,65 Z"
+      android:fillColor="#EF4444"/>
+  <path
+      android:pathData="M0,230 L180,230 L160,250 L0,250 Z"
+      android:fillColor="#94A3B8"/>
+</vector>

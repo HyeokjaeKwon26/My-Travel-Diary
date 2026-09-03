@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.traveler.feature.map.story.TravelStoryTimelineTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-08-24T20:16:15" hostname="DESKTOP-KCRJAHI" time="0.03">
+  <properties/>
+  <testcase name="testEriePhotoNeverActiveDuringNiagara" classname="com.traveler.feature.map.story.TravelStoryTimelineTest" time="0.009"/>
+  <testcase name="testProfilesContentCompression" classname="com.traveler.feature.map.story.TravelStoryTimelineTest" time="0.013"/>
+  <testcase name="testStoryTimelineStrictMonotonicity" classname="com.traveler.feature.map.story.TravelStoryTimelineTest" time="0.008"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

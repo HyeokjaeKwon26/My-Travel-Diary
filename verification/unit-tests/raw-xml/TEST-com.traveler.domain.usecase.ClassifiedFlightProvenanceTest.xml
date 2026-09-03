@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.traveler.domain.usecase.ClassifiedFlightProvenanceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-08-24T20:16:07" hostname="DESKTOP-KCRJAHI" time="0.099">
+  <properties/>
+  <testcase name="endpointOnlySegmentClassifiedAsAirplane_setsEstimatedGeodesicProvenance" classname="com.traveler.domain.usecase.ClassifiedFlightProvenanceTest" time="0.099"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.traveler.domain.usecase.MediaCaptureTimezonePrecedenceTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-08-24T20:16:09" hostname="DESKTOP-KCRJAHI" time="0.032">
+  <properties/>
+  <testcase name="testP0_01A_CrossTimezoneMovement_WithoutCaptureTimezone_ConflictingDates_BecomesAmbiguous" classname="com.traveler.domain.usecase.MediaCaptureTimezonePrecedenceTest" time="0.016"/>
+  <testcase name="testP0_01A_CrossTimezoneMovement_WithoutCaptureTimezone_ConsensusDates_AssignedConsensus" classname="com.traveler.domain.usecase.MediaCaptureTimezonePrecedenceTest" time="0.006"/>
+  <testcase name="testP0_01_NySeoulFlight_PhotoWithSeoulCaptureTimezone_UsesSeoulDate" classname="com.traveler.domain.usecase.MediaCaptureTimezonePrecedenceTest" time="0.009"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.traveler.core.timeline.GoogleTimelineParserRealFusionTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-08-24T20:16:06" hostname="DESKTOP-KCRJAHI" time="0.026">
+  <properties/>
+  <testcase name="caseC_timelinePathDuringVisit_doesNotCreateMovementSegment" classname="com.traveler.core.timeline.GoogleTimelineParserRealFusionTest" time="0.004"/>
+  <testcase name="caseD_trulyUncoveredTimelinePath_createsFallbackMovement" classname="com.traveler.core.timeline.GoogleTimelineParserRealFusionTest" time="0.003"/>
+  <testcase name="caseE_duplicateVisitCandidates_canonicalizesToOnePrimaryVisit" classname="com.traveler.core.timeline.GoogleTimelineParserRealFusionTest" time="0.008"/>
+  <testcase name="caseA_enclosingTimelinePathAndNestedSemanticActivity_fusesIntoOneCarMovement" classname="com.traveler.core.timeline.GoogleTimelineParserRealFusionTest" time="0.005"/>
+  <testcase name="testTransportPolicy_preservesSpecificGoogleModesEvenAtLowConfidence" classname="com.traveler.core.timeline.GoogleTimelineParserRealFusionTest" time="0.0"/>
+  <testcase name="caseB_activitySpanningMultipleTimelinePathChunks_fusesGeometryAcrossChunkBoundary" classname="com.traveler.core.timeline.GoogleTimelineParserRealFusionTest" time="0.006"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

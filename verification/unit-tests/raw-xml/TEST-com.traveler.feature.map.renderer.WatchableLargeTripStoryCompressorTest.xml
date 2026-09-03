@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.traveler.feature.map.renderer.WatchableLargeTripStoryCompressorTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-08-24T20:16:15" hostname="DESKTOP-KCRJAHI" time="0.005">
+  <properties/>
+  <testcase name="massiveTrip_respectsStoryNodeBudget_andMinimumVisualDurations" classname="com.traveler.feature.map.renderer.WatchableLargeTripStoryCompressorTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

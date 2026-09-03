@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.traveler.feature.map.renderer.RouteContinuityAnalysisTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-08-24T20:16:14" hostname="DESKTOP-KCRJAHI" time="0.168">
+  <properties/>
+  <testcase name="endpointWithin30mOfVisit_snapsVisuallyWithoutMutatingOriginalSegment" classname="com.traveler.feature.map.renderer.RouteContinuityAnalysisTest" time="0.068"/>
+  <testcase name="largeGapBetweenSegments_isPreservedWithoutConnector" classname="com.traveler.feature.map.renderer.RouteContinuityAnalysisTest" time="0.048"/>
+  <testcase name="smallGapBetweenConsecutiveSegments_generatesContinuityConnector" classname="com.traveler.feature.map.renderer.RouteContinuityAnalysisTest" time="0.052"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

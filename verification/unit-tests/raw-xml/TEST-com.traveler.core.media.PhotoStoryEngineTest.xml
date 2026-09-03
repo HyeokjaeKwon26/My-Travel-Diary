@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.traveler.core.media.PhotoStoryEngineTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-08-24T20:16:05" hostname="DESKTOP-KCRJAHI" time="0.016">
+  <properties/>
+  <testcase name="testScreenshotAndDownloadIneligible" classname="com.traveler.core.media.PhotoStoryEngineTest" time="0.0"/>
+  <testcase name="testLongVisitDistinctSessionClustering" classname="com.traveler.core.media.PhotoStoryEngineTest" time="0.001"/>
+  <testcase name="testTimestampContradictionIneligible" classname="com.traveler.core.media.PhotoStoryEngineTest" time="0.0"/>
+  <testcase name="testBoundedPhotoBudgetForLargeVisit" classname="com.traveler.core.media.PhotoStoryEngineTest" time="0.012"/>
+  <testcase name="testSyracusePhotoEmittedOnlyInContext" classname="com.traveler.core.media.PhotoStoryEngineTest" time="0.0"/>
+  <testcase name="testUserOverrideRepresentativeWinsSelection" classname="com.traveler.core.media.PhotoStoryEngineTest" time="0.001"/>
+  <testcase name="testEriePhotoNeverEmittedAfterNiagara" classname="com.traveler.core.media.PhotoStoryEngineTest" time="0.0"/>
+  <testcase name="testPhotoGpsFarFromRouteAnchorsToParent" classname="com.traveler.core.media.PhotoStoryEngineTest" time="0.0"/>
+  <testcase name="testUncertainTimestampIneligible" classname="com.traveler.core.media.PhotoStoryEngineTest" time="0.001"/>
+  <testcase name="testBurstCollapseFiftyPhotosInTwoMinutes" classname="com.traveler.core.media.PhotoStoryEngineTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

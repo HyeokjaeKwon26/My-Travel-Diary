@@ -1,0 +1,39 @@
+﻿<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="400dp"
+    android:height="250dp"
+    android:viewportWidth="400"
+    android:viewportHeight="250">
+  <!-- Sky -->
+  <path
+      android:pathData="M0,0h400v100h-400z"
+      android:fillColor="#BAE6FD"/>
+  <!-- Cliff / Rock -->
+  <path
+      android:pathData="M0,70 L120,70 L120,250 L0,250 Z"
+      android:fillColor="#475569"/>
+  <path
+      android:pathData="M280,70 L400,70 L400,250 L280,250 Z"
+      android:fillColor="#475569"/>
+  <!-- Upper river -->
+  <path
+      android:pathData="M120,50h160v40h-160z"
+      android:fillColor="#0EA5E9"/>
+  <!-- Waterfall body -->
+  <path
+      android:pathData="M120,70h160v120h-160z"
+      android:fillColor="#E0F2FE"/>
+  <!-- Water flow lines -->
+  <path
+      android:pathData="M140,70v110M170,70v120M200,70v115M230,70v120M260,70v110"
+      android:strokeColor="#38BDF8"
+      android:strokeWidth="4"/>
+  <!-- Basin pool -->
+  <path
+      android:pathData="M0,190h400v60h-400z"
+      android:fillColor="#0369A1"/>
+  <!-- Mist cloud -->
+  <path
+      android:pathData="M100,190 Q200,140 300,190 Q200,170 100,190 Z"
+      android:fillColor="#FFFFFF"
+      android:fillAlpha="0.75"/>
+</vector>

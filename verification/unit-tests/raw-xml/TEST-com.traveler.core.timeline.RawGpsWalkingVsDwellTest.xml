@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.traveler.core.timeline.RawGpsWalkingVsDwellTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-08-24T20:16:07" hostname="DESKTOP-KCRJAHI" time="0.025">
-  <properties/>
-  <testcase name="slowWalking_20MinutesMoving70MetersPerMinute_mustReconstructAsMovementNotVisit" classname="com.traveler.core.timeline.RawGpsWalkingVsDwellTest" time="0.009"/>
-  <testcase name="trafficQueueJitter_15MinutesInSmallRegion_mustReconstructAsVisit" classname="com.traveler.core.timeline.RawGpsWalkingVsDwellTest" time="0.007"/>
-  <testcase name="stationaryJitter_20MinutesWithin30Meters_mustReconstructAsVisit" classname="com.traveler.core.timeline.RawGpsWalkingVsDwellTest" time="0.009"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

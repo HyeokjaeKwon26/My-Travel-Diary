@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.traveler.core.common.time.TimeUtilsMovementTimeSpanTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-08-24T20:15:54" hostname="DESKTOP-KCRJAHI" time="0.036">
-  <properties/>
-  <testcase name="testDistinctZoneIdsWithEqualUtcOffset_ShowsBothGeographicTimezones" classname="com.traveler.core.common.time.TimeUtilsMovementTimeSpanTest" time="0.023"/>
-  <testcase name="testCrossTimezoneWithDayDifference_IncludesDayDifferenceIndicator" classname="com.traveler.core.common.time.TimeUtilsMovementTimeSpanTest" time="0.011"/>
-  <testcase name="testSameZoneId_UsesCompactFormat" classname="com.traveler.core.common.time.TimeUtilsMovementTimeSpanTest" time="0.002"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

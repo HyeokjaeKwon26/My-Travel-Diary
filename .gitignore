@@ -38,3 +38,6 @@ captures/
 
 # Kotlin compilation cache
 .kotlin/
+
+# Test runner output
+verification/unit-tests/

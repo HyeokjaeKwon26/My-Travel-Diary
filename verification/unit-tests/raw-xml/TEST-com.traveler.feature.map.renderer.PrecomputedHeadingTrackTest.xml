@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.traveler.feature.map.renderer.PrecomputedHeadingTrackTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-08-24T20:16:14" hostname="DESKTOP-KCRJAHI" time="0.028">
-  <properties/>
-  <testcase name="headingTrack_unwrapsAntimeridianAnglesCleanly" classname="com.traveler.feature.map.renderer.PrecomputedHeadingTrackTest" time="0.0"/>
-  <testcase name="headingTrack_evaluatesDeterministicallyAcrossSeeks" classname="com.traveler.feature.map.renderer.PrecomputedHeadingTrackTest" time="0.028"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

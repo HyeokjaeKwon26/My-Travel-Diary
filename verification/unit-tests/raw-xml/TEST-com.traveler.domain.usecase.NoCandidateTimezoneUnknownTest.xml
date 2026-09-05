@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.traveler.domain.usecase.NoCandidateTimezoneUnknownTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-08-24T20:16:09" hostname="DESKTOP-KCRJAHI" time="0.114">
-  <properties/>
-  <testcase name="zeroCandidateTripZones_yieldsUnknownConfidence_notUtcConsensus" classname="com.traveler.domain.usecase.NoCandidateTimezoneUnknownTest" time="0.114"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.traveler.feature.map.renderer.TravelMapRendererHierarchyTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-08-24T20:16:15" hostname="DESKTOP-KCRJAHI" time="0.101">
-  <properties/>
-  <testcase name="testPlaybackRouteHierarchy_activeSegmentIsProminent" classname="com.traveler.feature.map.renderer.TravelMapRendererHierarchyTest" time="0.06"/>
-  <testcase name="testRenderer_canonicalizesSegmentsAndRendersCleanCanvas" classname="com.traveler.feature.map.renderer.TravelMapRendererHierarchyTest" time="0.041"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

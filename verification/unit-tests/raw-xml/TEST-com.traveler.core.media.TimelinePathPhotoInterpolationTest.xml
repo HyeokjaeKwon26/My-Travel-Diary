@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.traveler.core.media.TimelinePathPhotoInterpolationTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-08-24T20:16:05" hostname="DESKTOP-KCRJAHI" time="0.001">
-  <properties/>
-  <testcase name="bentRoute_interpolatesAlongCurvedPath_notStraightEndpoints" classname="com.traveler.core.media.TimelinePathPhotoInterpolationTest" time="0.001"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

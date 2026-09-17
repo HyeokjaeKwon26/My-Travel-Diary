@@ -161,7 +161,7 @@ fun ExportVideoDialog(
                             FilterChip(selected = !resolution.landscape, onClick = { resolution = resolution.oriented(false) }, label = { Text("Portrait 9:16") })
                             FilterChip(selected = resolution.landscape, onClick = { resolution = resolution.oriented(true) }, label = { Text("Landscape 16:9") })
                         }
-                        Text("1080p uses 720p if the device encoder requires it. Terrain uses regions already saved on this phone.",fontSize=11.sp)
+                        Text("1080p uses 720p if the device encoder requires it.",fontSize=11.sp)
                         Text("Map detail is frozen from this phone’s cache before export. Areas not viewed online use the simpler reference map; the video does not download a full journey map.", fontSize=12.sp)
                         // Length Profiles
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -191,7 +191,7 @@ fun ExportVideoDialog(
                             )
                         }
 
-                        TextButton(onClick={backup.launch("journey-${trip.startDateIso}.travel3d.json")}) { Text("Back up this journey") }
+                        TextButton(onClick={backup.launch("journey-${trip.startDateIso}.travel.json")}) { Text("Back up this journey") }
                         // Export Options Toggles
                         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                             Row(

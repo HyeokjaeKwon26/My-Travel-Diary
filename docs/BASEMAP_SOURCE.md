@@ -4,14 +4,13 @@
 
 ---
 
-## 1. 정책 및 원칙 (Zero-Network Policy)
+## 1. Current map sources (1.1.0-rc1)
 
-* **100% 로컬 오프라인**:
-  * 런타임에 외부 타일 서버, Mapbox/Google Maps 서버 요청, PMTiles/MBTiles 외부 다운로드를 일체 수행하지 않습니다.
-  * 모든 지리 벡터(해안선, 호수, 국경선, 주/도 경계선, 주요 지명)는 APK 내 `assets/basemap_world.json`으로 번들링되어 제공됩니다.
-* **검증된 퍼블릭 도메인 데이터셋만 사용**:
-  * 전세계 지도 제작 표준 오픈 데이터인 **Natural Earth Vector Suite (1:110m / 1:50m)**의 공식 GeoJSON 소스 파일만을 사용하여 빌드 시점에 생성합니다.
-  * 라이선스: **Public Domain (CC0 1.0 Universal)** — 상업적/비상업적 제한 없이 영구적 재배포 가능.
+- The bundled regional geography and reference roads come from Natural Earth public-domain data. The source manifest and checksums are in [cartography-sources.json](cartography-sources.json). `tools/build_flat_cartography.py` builds `assets/basemap_3d.bin.gz`; the inherited filename names a binary data format, not a 3D renderer. AAPT packages it as `basemap_3d.bin`. The app draws it with a flat Canvas.
+- Optional street detail uses [OpenStreetMap standard raster tiles](https://operations.osmfoundation.org/policies/tiles/) from `tile.openstreetmap.org`, with [OpenStreetMap contributor attribution](https://www.openstreetmap.org/copyright). It is disabled by default. Only the visible area is requested, with an identifying User-Agent, server expiry/conditional requests, bounded caching, and backoff. No route prefetch or offline map packs are offered.
+- Export uses a frozen copy of previously cached detail without network downloads. Bundled geography is always drawn beneath missing detail. The app is not a navigation product.
+
+The tables below document the original bundled world-map generation. Their historical sizes and hashes are not checksums for the newer binary asset.
 
 ---
 

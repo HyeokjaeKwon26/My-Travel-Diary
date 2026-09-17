@@ -18,24 +18,24 @@
 
 ### 📱 How to Export Your Google Timeline JSON
 
-Google transitioned Google Maps Timeline to **On-Device (local phone storage)** in 2024. Therefore, Google Takeout web may be empty or outdated. Exporting directly from your smartphone's settings or Google Maps app is the **recommended and official method**:
+JSON is a file containing your location history. You do not need to open or edit it. First check the trip dates under **Google Maps → profile picture → Your Timeline**, then export from the phone that holds those records.
 
-#### Method 1: Android Phone Settings (Recommended)
-1. Open phone **Settings** (⚙️) on your Android device.
-2. Go to **Location** → **Location services**.
-3. Tap **Timeline** (or *Google Location History*).
-4. Scroll down and tap **Export Timeline data**.
-5. Save the generated `.json` file to your `Downloads` folder or share it via Google Drive.
+#### Export from Android Settings
 
-#### Method 2: Google Maps App
-1. Open the **Google Maps** app.
-2. Tap your **Profile icon** (top-right) → **Your Timeline**.
-3. Tap the **three-dot menu (`⋮`)** (top-right) → **Settings and privacy**.
-4. Scroll down and tap **Export Timeline data**.
-5. Save the `.json` file to your device.
+1. Open your phone's **Settings** app.
+2. Select **Location → Location services → Timeline**.
+3. Choose **Export Timeline data → Continue**.
+4. Pick an easy-to-find folder such as **Downloads**, then tap **Save**.
+5. Wait for export to finish. In My Travel Diary, use **+ New Travel Story → Choose Timeline JSON File** to select the saved **`.json` file**.
 
-#### Method 3: Google Takeout (Web)
-- Visit [takeout.google.com](https://takeout.google.com/) → Deselect all → Check **Location History (Timeline)** → Choose JSON format and download.
+These steps follow [Google's current Android instructions](https://support.google.com/maps/answer/6258979?co=GENIE.Platform%3DAndroid&hl=en). Menu names can vary by device; if necessary, search for `Timeline` in your phone settings.
+
+#### If you get stuck
+
+- **No export option:** Update Google Maps and check that you are using the phone with your history. Timeline is unavailable on Android Go.
+- **No trip records:** Check the account and phone used during the trip. This app cannot recover unrecorded or deleted routes from photos alone.
+- **Backup is on, but there is no JSON:** Timeline backup and file export are separate. Use **Export Timeline data** to save the file you need.
+- **Google Takeout on a computer:** For your first import, use the phone export steps above. Select a JSON file containing journey records, not a ZIP archive or a map screenshot.
 
 ---
 
@@ -48,7 +48,7 @@ Google transitioned Google Maps Timeline to **On-Device (local phone storage)** 
 
 1. Tap **`+ New Travel Story`** on the home screen.
 2. Enter an optional **Trip Title** and select your **Travel Date Range** (`YYYY-MM-DD`).
-3. Tap **`Choose Timeline JSON File`** and select the JSON file exported from your phone settings or Google Takeout.
+3. Tap **`Choose Timeline JSON File`**, open **Downloads** or your chosen export folder, and select the **`.json` file** saved above.
 4. Tap **`Enable`** to grant read access to your local photo gallery.
 5. Tap **`Reconstruct Travel Story`**. GPS trajectory filtering, visit clustering, and photo EXIF timestamp synchronization are processed **100% on-device** without any cloud connection.
 
@@ -128,24 +128,24 @@ Google transitioned Google Maps Timeline to **On-Device (local phone storage)** 
 
 ### 📱 구글 타임라인 JSON 내보내기 방법
 
-구글이 2024년 개인정보 보호 강화를 위해 타임라인 데이터를 클라우드 서버 대신 **각 사용자의 스마트폰 로컬 기기(On-Device) 내부**에만 저장하도록 정책을 전면 개편했습니다. 따라서 PC의 구글 테이크아웃 웹에서는 데이터가 비어 있는 경우가 많으며, **스마트폰에서 직접 내보내는 것이 가장 최신이고 권장되는 공식 방법**입니다:
+JSON은 이동 기록이 담긴 파일로, 직접 열거나 편집할 필요는 없습니다. 먼저 **Google 지도 → 프로필 사진 → 내 타임라인**에서 여행 날짜의 기록을 확인하고, 그 기록이 저장된 휴대폰에서 내보내세요.
 
-#### 방법 1: 안드로이드 스마트폰 [설정]에서 내보내기 (가장 추천)
-1. 스마트폰의 **[설정]** (⚙️ 톱니바퀴 아이콘) 앱을 엽니다.
-2. **[위치]** → **[위치 서비스]** 메뉴로 이동합니다.
-3. **[타임라인]** (또는 *Google 위치 기록*)을 선택합니다.
-4. 화면 아래로 스크롤하여 **[타임라인 데이터 내보내기]** 를 탭합니다.
-5. 생성된 `.json` 파일을 스마트폰의 `Download` 폴더에 저장하거나 Google Drive/메신저로 공유합니다.
+#### Android 휴대폰 설정에서 내보내기
 
-#### 방법 2: [Google 지도] 앱에서 내보내기
-1. **Google 지도** 앱을 실행합니다.
-2. 우측 상단 **프로필 아이콘** 탭 → **[내 타임라인]** 을 선택합니다.
-3. 우측 상단 더보기 메뉴(**`⋮`**) 탭 → **[설정 및 개인정보 보호]** 를 선택합니다.
-4. 화면 아래로 스크롤하여 **[타임라인 데이터 내보내기]** 를 탭합니다.
-5. 스마트폰 저장소에 `.json` 파일로 저장합니다.
+1. 휴대폰의 **설정** 앱을 엽니다.
+2. **위치 → 위치 서비스 → 타임라인**을 선택합니다.
+3. **타임라인 데이터 내보내기 → 계속**을 누릅니다.
+4. **Download / 다운로드**처럼 찾기 쉬운 폴더를 고르고 **저장**을 누릅니다.
+5. 내보내기가 끝나면 My Travel Diary의 **+ New Travel Story → Choose Timeline JSON File**에서 저장한 **`.json` 파일**을 선택합니다.
 
-#### 방법 3: 구글 테이크아웃 웹사이트 (PC)
-- [takeout.google.com](https://takeout.google.com/) 접속 → 모두 선택 해제 → **[위치 기록(타임라인)]** 체크 → JSON 포맷으로 압축 다운로드.
+이 순서는 [Google의 현재 Android 공식 안내](https://support.google.com/maps/answer/6258979?co=GENIE.Platform%3DAndroid&hl=ko)를 따릅니다. 기기에 따라 메뉴 이름이 다를 수 있으며, 찾기 어렵다면 휴대폰 설정에서 `타임라인`을 검색해 보세요.
+
+#### 준비하다 막혔을 때
+
+- **내보내기 메뉴가 안 보여요:** Google 지도를 업데이트하고, 기록이 있는 휴대폰인지 확인하세요. Android Go에서는 타임라인을 지원하지 않습니다.
+- **여행 기록이 없어요:** 여행 당시 사용한 계정과 휴대폰을 확인하세요. 기록되지 않았거나 삭제된 경로를 이 앱이 사진만으로 복구할 수는 없습니다.
+- **백업은 켰는데 JSON 파일이 없어요:** 타임라인 백업과 파일 내보내기는 별개입니다. 위의 **타임라인 데이터 내보내기**로 파일을 저장하세요.
+- **PC의 Google Takeout을 쓰면 되나요?** 처음 가져온다면 위의 휴대폰 내보내기 방법을 이용하세요. 실제 이동 기록이 담긴 JSON 파일을 선택해야 하며, ZIP 압축파일이나 지도 화면 캡처를 선택하면 안 됩니다.
 
 ---
 
@@ -158,7 +158,7 @@ Google transitioned Google Maps Timeline to **On-Device (local phone storage)** 
 
 1. 홈 화면 우측 하단의 **`+ New Travel Story`** 버튼을 누릅니다.
 2. **여행 제목(Trip Title)** 과 **여행 날짜(Date Range, `YYYY-MM-DD`)** 를 설정합니다.
-3. **`Choose Timeline JSON File`** 을 눌러 스마트폰 설정이나 구글 테이크아웃에서 내보낸 타임라인 JSON 파일을 선택합니다.
+3. **`Choose Timeline JSON File`** 을 누르고 **다운로드** 또는 앞서 저장한 폴더에서 **`.json` 파일**을 선택합니다.
 4. **`Enable`** 버튼을 눌러 사진 갤러리 접근 권한을 허용합니다.
 5. **`Reconstruct Travel Story`** 를 누르면 인터넷 연결 없이 **100% 기기 내부(On-Device)** 에서 GPS 경로 정제, 방문지 클러스터링, 사진 EXIF 타임스탬프 동기화가 즉시 이루어집니다.
 

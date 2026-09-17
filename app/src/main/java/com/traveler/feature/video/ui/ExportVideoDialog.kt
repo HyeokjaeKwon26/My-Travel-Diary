@@ -2,6 +2,8 @@ package com.traveler.feature.video.ui
 
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -29,11 +31,12 @@ import java.io.File
 
 sealed interface VideoExportState {
     object Idle : VideoExportState
-    data class Encoding(val progress: Float) : VideoExportState
+    data class Encoding(val progress: Float, val startedMs: Long = android.os.SystemClock.elapsedRealtime()) : VideoExportState
     data class Ready(val videoFile: File, val durationSeconds: Float, val isSavedToGallery: Boolean = false) : VideoExportState
     data class Error(val message: String) : VideoExportState
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ExportVideoDialog(
     trip: Trip,
@@ -44,11 +47,39 @@ fun ExportVideoDialog(
     val coroutineScope = rememberCoroutineScope()
 
     var selectedProfile by remember { mutableStateOf(StoryDurationProfile.STANDARD) }
+    var resolution by remember { mutableStateOf(com.traveler.feature.video.VideoResolution.FULL_HD) }
     var includeMusic by remember { mutableStateOf(true) }
     var generalizeHomeAddress by remember { mutableStateOf(true) }
     var exportState by remember { mutableStateOf<VideoExportState>(VideoExportState.Idle) }
     var currentEncoder by remember { mutableStateOf<com.traveler.feature.video.TravelVideoEncoder?>(null) }
     var exportJob by remember { mutableStateOf<kotlinx.coroutines.Job?>(null) }
+    fun saveToGallery(state: VideoExportState.Ready) {
+        coroutineScope.launch {
+            val uri = TravelVideoExporter.saveVideoToMediaStore(context, state.videoFile, trip.title, trip.startDateIso, trip.endDateIso)
+            if (uri != null) {
+                exportState = state.copy(isSavedToGallery = true)
+                Toast.makeText(context, "Saved to Movies/My Travel Diary", Toast.LENGTH_LONG).show()
+            } else Toast.makeText(context, "Failed to save video", Toast.LENGTH_SHORT).show()
+        }
+    }
+    val legacyWritePermission = androidx.activity.compose.rememberLauncherForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) (exportState as? VideoExportState.Ready)?.let { saveToGallery(it) }
+        else Toast.makeText(context, "Storage permission is needed to save to the gallery on this Android version", Toast.LENGTH_LONG).show()
+    }
+
+    DisposableEffect(Unit) {
+        onDispose { currentEncoder?.cancel(); exportJob?.cancel() }
+    }
+
+    val backup = androidx.activity.compose.rememberLauncherForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.CreateDocument("application/json")
+    ) { uri -> if(uri!=null) coroutineScope.launch {
+        try { com.traveler.core.journey.TripArchive.export(context,trip,uri);Toast.makeText(context,"Journey backup saved. Original photos are not included.",Toast.LENGTH_LONG).show() }
+        catch(e:kotlinx.coroutines.CancellationException) { throw e }
+        catch(e:Exception) { Toast.makeText(context,e.message ?: "Backup failed",Toast.LENGTH_LONG).show() }
+    } }
 
     // Dynamically calculate estimated durations for the 3 profiles (P1)
     val shortTimeline = remember(trip, renderModel) {
@@ -78,14 +109,17 @@ fun ExportVideoDialog(
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
             modifier = Modifier
-                .fillMaxWidth(0.92f)
+                .widthIn(max = 640.dp)
+                .fillMaxWidth(0.96f)
                 .wrapContentHeight()
                 .padding(16.dp)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(20.dp),
+                    .padding(20.dp)
+                    .heightIn(max=600.dp)
+                    .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 // Header
@@ -94,7 +128,7 @@ fun ExportVideoDialog(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
                         Icon(Icons.Default.PlayArrow, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
@@ -113,11 +147,22 @@ fun ExportVideoDialog(
                 when (val state = exportState) {
                     is VideoExportState.Idle -> {
                         Text(
-                            text = "Select a video length profile to create a cinematic 9:16 travel video with map routes, photos, and music.",
+                            text = "Select a video length profile to create a travel video with map routes, photos, and music.",
                             fontSize = 13.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
 
+                        FlowRow {
+                            com.traveler.feature.video.VideoResolution.values().filter { it.landscape == resolution.landscape }.forEach { option ->
+                                FilterChip(selected=resolution==option,onClick={resolution=option},label={Text(option.label)},modifier=Modifier.padding(end=8.dp))
+                            }
+                        }
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            FilterChip(selected = !resolution.landscape, onClick = { resolution = resolution.oriented(false) }, label = { Text("Portrait 9:16") })
+                            FilterChip(selected = resolution.landscape, onClick = { resolution = resolution.oriented(true) }, label = { Text("Landscape 16:9") })
+                        }
+                        Text("1080p uses 720p if the device encoder requires it. Terrain uses regions already saved on this phone.",fontSize=11.sp)
+                        Text("Map detail is frozen from this phone’s cache before export. Areas not viewed online use the simpler reference map; the video does not download a full journey map.", fontSize=12.sp)
                         // Length Profiles
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                             ProfileOptionCard(
@@ -146,6 +191,7 @@ fun ExportVideoDialog(
                             )
                         }
 
+                        TextButton(onClick={backup.launch("journey-${trip.startDateIso}.travel3d.json")}) { Text("Back up this journey") }
                         // Export Options Toggles
                         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                             Row(
@@ -170,7 +216,7 @@ fun ExportVideoDialog(
                             ) {
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text("Generalize Home Location", fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
-                                    Text("Hides exact address numbers for privacy", fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                    Text("Generalizes place labels; route and photo contents stay visible", fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 }
                                 Switch(
                                     checked = generalizeHomeAddress,
@@ -188,16 +234,19 @@ fun ExportVideoDialog(
                                     StoryDurationProfile.FULL_STORY -> fullTimeline
                                 }
                                 exportJob = coroutineScope.launch {
+                                    try {
                                     val file = TravelVideoExporter.exportVideo(
                                         context = context,
                                         trip = trip,
                                         renderModel = renderModel,
                                         profile = selectedProfile,
                                         includeMusic = includeMusic,
+                                        resolution = resolution,
                                         generalizeHomeAddress = generalizeHomeAddress,
                                         encoderRef = { enc -> currentEncoder = enc },
                                         onProgress = { p ->
-                                            exportState = VideoExportState.Encoding(p)
+                                            val started = (exportState as? VideoExportState.Encoding)?.startedMs ?: android.os.SystemClock.elapsedRealtime()
+                                            if (exportJob?.isActive == true) exportState = VideoExportState.Encoding(p, started)
                                         }
                                     )
                                     if (file != null) {
@@ -205,6 +254,14 @@ fun ExportVideoDialog(
                                     } else {
                                         exportState = VideoExportState.Error("Failed to encode video.")
                                     }
+                                    } catch (e: kotlinx.coroutines.CancellationException) {
+                                        throw e
+                                    } catch (e: Exception) {
+                                        exportState = VideoExportState.Error(e.message ?: "Video export failed")
+                                    } finally {
+                                        currentEncoder = null
+                                    }
+
                                 }
                             },
                             modifier = Modifier.fillMaxWidth()
@@ -235,6 +292,11 @@ fun ExportVideoDialog(
                                 color = MaterialTheme.colorScheme.primary
                             )
 
+                            val estimator = remember(state.startedMs) { com.traveler.domain.usecase.ImportProgressEstimator(state.startedMs) }
+                            var now by remember { mutableStateOf(android.os.SystemClock.elapsedRealtime()) }
+                            LaunchedEffect(state.startedMs) { while(true) { kotlinx.coroutines.delay(1000);now=android.os.SystemClock.elapsedRealtime() } }
+                            Text(if(state.progress < .03f) "Preparing saved map detail…" else estimator.remaining(
+                                com.traveler.domain.usecase.ImportProgress("Encoding",state.progress),now),fontSize=12.sp)
                             Spacer(modifier = Modifier.height(8.dp))
                             OutlinedButton(
                                 onClick = {
@@ -287,20 +349,8 @@ fun ExportVideoDialog(
 
                             OutlinedButton(
                                 onClick = {
-                                    val contentUri = androidx.core.content.FileProvider.getUriForFile(
-                                        context,
-                                        "${context.packageName}.fileprovider",
-                                        state.videoFile
-                                    )
-                                    val viewIntent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
-                                        setDataAndType(contentUri, "video/mp4")
-                                        addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                                    }
-                                    try {
-                                        context.startActivity(viewIntent)
-                                    } catch (_: Exception) {
-                                        Toast.makeText(context, "No video player application found", Toast.LENGTH_SHORT).show()
-                                    }
+                                    context.startActivity(android.content.Intent(context, com.traveler.feature.video.VideoPlayerActivity::class.java)
+                                        .putExtra("videoPath", state.videoFile.absolutePath))
                                 },
                                 modifier = Modifier.fillMaxWidth()
                             ) {
@@ -315,21 +365,11 @@ fun ExportVideoDialog(
                             ) {
                                 OutlinedButton(
                                     onClick = {
-                                        coroutineScope.launch {
-                                            val uri = TravelVideoExporter.saveVideoToMediaStore(
-                                                context = context,
-                                                videoFile = state.videoFile,
-                                                tripTitle = trip.title,
-                                                startDateIso = trip.startDateIso,
-                                                endDateIso = trip.endDateIso
-                                            )
-                                            if (uri != null) {
-                                                exportState = state.copy(isSavedToGallery = true)
-                                                Toast.makeText(context, "Saved to Movies/My Travel Diary", Toast.LENGTH_LONG).show()
-                                            } else {
-                                                Toast.makeText(context, "Failed to save video", Toast.LENGTH_SHORT).show()
-                                            }
-                                        }
+                                        if (android.os.Build.VERSION.SDK_INT <= 28 &&
+                                            androidx.core.content.ContextCompat.checkSelfPermission(context, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                                            legacyWritePermission.launch(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                        } else saveToGallery(state)
+
                                     },
                                     modifier = Modifier.weight(1f)
                                 ) {
@@ -395,10 +435,9 @@ private fun ProfileOptionCard(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Column {
                     Text(title, fontWeight = FontWeight.Bold, fontSize = 14.sp)
                     if (isRecommended) {
-                        Spacer(modifier = Modifier.width(6.dp))
                         Text(
                             "Recommended",
                             fontSize = 10.sp,

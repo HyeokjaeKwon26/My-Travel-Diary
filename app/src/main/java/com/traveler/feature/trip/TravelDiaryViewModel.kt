@@ -42,22 +42,34 @@ class TravelDiaryViewModel(application: Application) : AndroidViewModel(applicat
 
     private var currentTripId: String? = null
 
-    fun loadTrip(tripId: String) {
+    private var loadJob: kotlinx.coroutines.Job? = null
+    private val _photoPreparation = MutableStateFlow("")
+    val photoPreparation: StateFlow<String> = _photoPreparation.asStateFlow()
+    fun loadTrip(tripId: String, refreshPhotos: Boolean = false) {
         currentTripId = tripId
-        viewModelScope.launch {
+        loadJob?.cancel()
+        loadJob = viewModelScope.launch {
+            _photoPreparation.value = ""
             _uiState.value = TripDetailUiState.Loading
             try {
                 val trip = repository.getTripById(tripId)
                 if (trip != null) {
-                    _uiState.value = TripDetailUiState.Success(trip)
+                    val prepared = com.traveler.core.media.tripMemoryStore(getApplication()).prepare(trip, refreshPhotos) { done, total ->
+                        _photoPreparation.value = "사진 구성 준비 중 · $done / $total"
+                    }
+                    _photoPreparation.value = ""
+                    _uiState.value = TripDetailUiState.Success(prepared)
                 } else {
                     _uiState.value = TripDetailUiState.Error("Trip not found")
                 }
-            } catch (e: Exception) {
+            } catch (e: kotlinx.coroutines.CancellationException) { throw e }
+            catch (e: Exception) {
                 _uiState.value = TripDetailUiState.Error(e.message ?: "Failed to load trip")
             }
         }
     }
+
+    fun refreshMemories() { currentTripId?.let { loadTrip(it, refreshPhotos = true) } }
 
     fun focusLocation(point: GeoPoint) {
         _focusedLocation.value = point

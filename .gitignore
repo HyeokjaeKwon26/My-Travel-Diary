@@ -41,3 +41,6 @@ captures/
 
 # Test runner output
 verification/unit-tests/
+
+# Local verification artifacts
+artifacts/

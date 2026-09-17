@@ -252,6 +252,9 @@ class TravelMapRenderer(
     val hasRegionalBasemap: Boolean
         get() = preparedRegionalBasemap != null
 
+    var streetLayer: ((Canvas, TravelViewportCalculator) -> Unit)? = null
+    private val flatVehicle = com.traveler.feature.map.flat.FlatVehicle()
+
     private var cachedRenderModel: TravelMapRenderModel? = null
     private var cachedPreparedMap: PreparedTravelMap? = null
 
@@ -301,28 +304,8 @@ class TravelMapRenderer(
             val prov = seg.geometryProvenance
             val hasDetailedGeometry = seg.simplifiedPoints.size > 2 || seg.rawPoints.isNotEmpty()
 
-            val rawPath = if (isFlight && seg.simplifiedPoints.size <= 2) {
-                WebMercator.generateGreatCirclePath(seg.startPoint, seg.endPoint, steps = 32)
-            } else if (seg.simplifiedPoints.isNotEmpty()) {
-                seg.simplifiedPoints
-            } else {
-                listOf(seg.startPoint, seg.endPoint)
-            }
-
-            // P1-05: Render-only snap to adjacent Visit if within 30m
-            val snappedPath = ArrayList<GeoPoint>(rawPath.size)
-            for (ptIdx in rawPath.indices) {
-                var pt = rawPath[ptIdx]
-                if (ptIdx == 0) {
-                    val nearestVisit = renderModel.visits.find { GeodesicUtils.distanceMeters(it.location, pt) <= 30.0 }
-                    if (nearestVisit != null) pt = nearestVisit.location
-                } else if (ptIdx == rawPath.size - 1) {
-                    val nearestVisit = renderModel.visits.find { GeodesicUtils.distanceMeters(it.location, pt) <= 30.0 }
-                    if (nearestVisit != null) pt = nearestVisit.location
-                }
-                snappedPath.add(pt)
-                allPoints.add(pt)
-            }
+            val snappedPath = com.traveler.core.journey.SharedRouteGeometry.displayPath(seg)
+            allPoints.addAll(snappedPath)
 
             var totalDist = 0.0
             val cumDists = ArrayList<Double>(snappedPath.size)
@@ -358,37 +341,6 @@ class TravelMapRenderer(
                 )
             )
 
-            // P1-05: Continuity Connector for Small Gaps (<= 500m & <= 15min) between consecutive segments
-            if (i < sortedSegments.size - 1) {
-                val nextSeg = sortedSegments[i + 1]
-                val gapDist = GeodesicUtils.distanceMeters(seg.endPoint, nextSeg.startPoint)
-                val gapTimeMs = nextSeg.startTimestampEpochMs - seg.endTimestampEpochMs
-                if (gapDist in 1.0..500.0 && gapTimeMs in 0L..900_000L) {
-                    val connectorPath = listOf(seg.endPoint, nextSeg.startPoint)
-                    val dummySeg = MovementSegment(
-                        id = "conn_${seg.id}_${nextSeg.id}",
-                        startTimestampEpochMs = seg.endTimestampEpochMs,
-                        endTimestampEpochMs = nextSeg.startTimestampEpochMs,
-                        startPoint = seg.endPoint,
-                        endPoint = nextSeg.startPoint,
-                        distanceMeters = gapDist,
-                        durationMillis = gapTimeMs,
-                        transport = seg.transport,
-                        geometryProvenance = GeometryProvenance.CONTINUITY_ESTIMATE
-                    )
-                    preparedSegments.add(
-                        PreparedSegment(
-                            segment = dummySeg,
-                            pathPoints = connectorPath,
-                            midLocation = GeodesicUtils.interpolate(seg.endPoint, nextSeg.startPoint, 0.5),
-                            midHeadingDegrees = GeodesicUtils.initialBearing(seg.endPoint, nextSeg.startPoint).toFloat(),
-                            isFlight = false,
-                            isEstimated = true,
-                            isContinuityConnector = true
-                        )
-                    )
-                }
-            }
         }
 
         // P1-04A: Deduplicate fallback city labels across nearby visits
@@ -448,20 +400,48 @@ class TravelMapRenderer(
     ) {
         if (width <= 0 || height <= 0) return
 
+        val saved = canvas.save()
+        try {
+            canvas.clipRect(0, 0, width, height)
+            renderClipped(canvas, width, height, renderModel, playbackState, insets)
+        } finally {
+            canvas.restoreToCount(saved)
+        }
+    }
+
+    /** Fit the actual route for a postcard, without the live map's regional minimum zoom. */
+    fun renderOverview(canvas: Canvas, width: Int, height: Int, model: TravelMapRenderModel, insets: SafeContentInsets) {
+        val ref = prepareMap(model).viewportRef
+        val aspect = maxOf(1f, width-insets.left-insets.right) / maxOf(1f, height-insets.top-insets.bottom)
+        var sx = maxOf(.00001, ref.maxX-ref.minX) * 1.35
+        var sy = maxOf(.00001, ref.maxY-ref.minY) * 1.35
+        if (sx/sy < aspect) sx=sy*aspect else sy=sx/aspect
+        val viewport = TravelViewportCalculator(width,height,insets,ref.referenceLng,
+            (ref.minX+ref.maxX-sx)/2,(ref.minY+ref.maxY-sy)/2,sx,sy)
+        val saved=canvas.save()
+        try {
+            canvas.clipRect(0,0,width,height)
+            renderClipped(canvas,width,height,model,null,insets,viewport)
+        } finally { canvas.restoreToCount(saved) }
+    }
+
+    private fun renderClipped(canvas: Canvas, width: Int, height: Int,
+                              renderModel: TravelMapRenderModel, playbackState: TravelPlaybackState?,
+                              insets: SafeContentInsets, overviewViewport: TravelViewportCalculator? = null) {
         val prepared = prepareMap(renderModel)
 
         // 1. Draw Canvas background (Water / Ocean)
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), bgPaint)
 
         // 2. Initialize Web Mercator Viewport with precomputed reference in O(1) time
-        val viewport = if (playbackState != null) {
+        val viewport = overviewViewport ?: if (playbackState != null && !playbackState.isTitleCardActive && !playbackState.isEndCardActive) {
             TravelViewportCalculator(
                 width = width,
                 height = height,
                 insets = insets,
                 ref = prepared.viewportRef,
-                playbackCameraCenter = playbackState.cameraCenter,
-                playbackCameraSpanDegrees = playbackState.cameraSpanLat
+                playbackCameraCenter = playbackState.currentPosition,
+                playbackCameraSpanDegrees = com.traveler.feature.map.flat.FlatCamera.span(playbackState)
             )
         } else {
             TravelViewportCalculator(
@@ -578,6 +558,8 @@ class TravelMapRenderer(
                 }
             }
         }
+
+        streetLayer?.invoke(canvas, viewport)
 
         // 5. Draw Movement Routes with P1-06 Visual Hierarchy (Anti-Spaghetti)
         val currentPlayTs = playbackState?.storyTimeMs ?: Long.MAX_VALUE
@@ -803,58 +785,10 @@ class TravelMapRenderer(
             }
         }
 
-        // 10. Playback Mode Animated Vehicle Indicator with Directional Pointer (P1-09, Pass 21.8)
-        if (playbackState != null) {
+        if (playbackState != null && !playbackState.isTitleCardActive && !playbackState.isEndCardActive) {
             viewport.toScreen(playbackState.currentPosition.latitude, playbackState.currentPosition.longitude, reusableCoords)
-            val px = reusableCoords[0]
-            val py = reusableCoords[1]
-
-            canvas.save()
-            canvas.translate(px, py)
-
-            // P2-07: Subtle life/breathing animation on vehicle indicator
-            val timeSec = (playbackState.storyTimeMs % 10000) / 1000f
-            val bobScale = 1.0f + 0.035f * kotlin.math.sin(timeSec * 6.0f)
-            canvas.scale(bobScale, bobScale)
-
-            val modeColor = getTransportColor(playbackState.currentTransportMode)
-
-            // Dynamic motion ripple pulse when in transit
-            if (playbackState.currentSegment != null) {
-                val pulsePhase = (playbackState.storyTimeMs % 1200) / 1200f
-                val pulseRadius = 24f + pulsePhase * 18f
-                val pulseAlpha = ((1.0f - pulsePhase) * 120).toInt()
-                vehiclePulsePaint.color = modeColor
-                vehiclePulsePaint.alpha = pulseAlpha
-                canvas.drawCircle(0f, 0f, pulseRadius, vehiclePulsePaint)
-            }
-
-            // Flight elevation shadow (3D altitude effect)
-            if (playbackState.currentTransportMode == TransportMode.AIRPLANE) {
-                val alt = playbackState.currentAltitudeMeters ?: 1000.0
-                val shadowOffset = minOf(20f, (alt / 500.0).toFloat() + 5f)
-                canvas.drawCircle(shadowOffset, shadowOffset, 22f, vehicleShadowPaint)
-            }
-
-            // Vehicle circular backdrop
-            canvas.drawCircle(0f, 0f, 24f, vehicleBgPaint)
-
-            // Directional pointer chevron in transport mode color pointing in smoothed heading direction
-            vehiclePointerPaint.color = modeColor
-
-            canvas.save()
-            canvas.rotate(playbackState.currentHeadingDegrees)
-            vehiclePointerPath.reset()
-            vehiclePointerPath.moveTo(0f, -30f)
-            vehiclePointerPath.lineTo(8f, -18f)
-            vehiclePointerPath.lineTo(-8f, -18f)
-            vehiclePointerPath.close()
-            canvas.drawPath(vehiclePointerPath, vehiclePointerPaint)
-            canvas.restore()
-
-            // Mode emoji in center
-            canvas.drawText(playbackState.currentTransportMode.emoji, 0f, 10f, vehicleTextPaint)
-            canvas.restore()
+            flatVehicle.draw(canvas, reusableCoords[0], reusableCoords[1],
+                minOf(width, height).toFloat(), playbackState)
         }
     }
 

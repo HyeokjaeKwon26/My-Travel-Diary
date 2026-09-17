@@ -17,11 +17,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.traveler.core.model.Trip
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,6 +33,20 @@ fun HomeScreen(
     onNavigateToTripDetail: (String) -> Unit
 ) {
     val trips by viewModel.trips.collectAsState()
+    val sort by viewModel.sort.collectAsState()
+    val ascending by viewModel.ascending.collectAsState()
+    val context=androidx.compose.ui.platform.LocalContext.current
+    val scope=rememberCoroutineScope()
+    val restore=androidx.activity.compose.rememberLauncherForActivityResult(androidx.activity.result.contract.ActivityResultContracts.OpenDocument()) { uri ->
+        if(uri!=null) scope.launch {
+            try {
+                val id=com.traveler.core.journey.TripArchive.restore(context,uri)
+                android.widget.Toast.makeText(context,"Journey restored. Allow photo access to reconnect your gallery.",android.widget.Toast.LENGTH_LONG).show()
+                onNavigateToTripDetail(id)
+            } catch(e:kotlinx.coroutines.CancellationException) { throw e }
+            catch(e:Exception) { android.widget.Toast.makeText(context,e.message ?: "Could not restore journey",android.widget.Toast.LENGTH_LONG).show() }
+        }
+    }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -41,15 +57,14 @@ fun HomeScreen(
                         Text(
                             text = "My Travel Diary",
                             fontWeight = FontWeight.Bold,
-                            fontSize = 22.sp
+                            fontSize = 20.sp,
+                            maxLines = 1,
+                            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "✈️ 🌍",
-                            fontSize = 18.sp
-                        )
+
                     }
                 },
+                actions = { TextButton(onClick={restore.launch(arrayOf("application/json","application/octet-stream"))}) { Text("Restore") } },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surface
                 )
@@ -75,9 +90,27 @@ fun HomeScreen(
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(16.dp),
+                    contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 100.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
+                    item(key = "sort-controls") {
+                        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                            var expanded by remember { mutableStateOf(false) }
+                            Box(Modifier.weight(1f)) {
+                                TextButton(onClick = { expanded = true }) { Text("정렬: ${sort.label} ▾") }
+                                DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                                    TripSort.entries.forEach { option ->
+                                        DropdownMenuItem(text = { Text(option.label) }, onClick = {
+                                            viewModel.setSort(option); expanded = false
+                                        })
+                                    }
+                                }
+                            }
+                            TextButton(onClick = { viewModel.setSort(sort, !ascending) }) {
+                                Text(if (ascending) "↑ 오름차순" else "↓ 내림차순")
+                            }
+                        }
+                    }
                     items(trips, key = { it.id }) { trip ->
                         TripCard(
                             trip = trip,
@@ -118,8 +151,9 @@ fun HomeScreen(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun TripCard(
+internal fun TripCard(
     trip: Trip,
     onClick: () -> Unit,
     onDelete: () -> Unit
@@ -127,6 +161,7 @@ private fun TripCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
+            .testTag("trip-card-${trip.id}")
             .clickable(onClick = onClick),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
@@ -143,6 +178,7 @@ private fun TripCard(
             ) {
                 Text(
                     text = trip.title,
+                    modifier = Modifier.weight(1f),
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -166,25 +202,35 @@ private fun TripCard(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            Row(
+            FlowRow(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 val distanceKm = String.format(java.util.Locale.US, "%.1f", trip.totalDistanceMeters / 1000.0)
                 BadgeInfo(icon = "📍", label = "$distanceKm km")
                 BadgeInfo(icon = "📷", label = "${trip.totalMediaCount} photos")
-                if (trip.cities.isNotEmpty()) {
-                    BadgeInfo(icon = "🏙️", label = "${trip.cities.size} places")
-                }
+                BadgeInfo(icon = "📌", label = "방문 기록 ${trip.visitSummary.visitCount}회")
             }
 
-            if (trip.cities.isNotEmpty()) {
+            val summary = trip.visitSummary
+            if (summary.visitCount > 0) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Visited: ${trip.cities.take(3).joinToString(" → ")}${if (trip.cities.size > 3) "..." else ""}",
+                    text = if (summary.representativeNames.isEmpty()) "장소 이름 정보 부족" else buildString {
+                        append(if (summary.hasApproximateRegions) "주요 방문 지역: " else "대표 장소: ")
+                        append(summary.representativeNames.joinToString(" · "))
+                        if (summary.otherNamedPlaceCount > 0) append(" 외 ${summary.otherNamedPlaceCount}곳")
+                    },
+                    maxLines = 2,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.primary
                 )
+                if (summary.unresolvedVisitCount > 0 && summary.representativeNames.isNotEmpty()) {
+                    Text("지역을 확인하지 못한 방문 ${summary.unresolvedVisitCount}회",
+                        fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
             }
         }
     }

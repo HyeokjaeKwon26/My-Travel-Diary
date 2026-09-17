@@ -17,11 +17,13 @@
 
 ## 2. 번들링 음원 상세 내역 (Bundled Tracks)
 
+현재 M4A는 기존 앱의 WAV 음원을 용량을 줄여 변환한 파일입니다. WAV는 커밋 `d0efcaa`에서 교체되었고, 아래 저작권 설명은 기존 프로젝트 문서에서 이어받은 기록입니다. 저장소만으로 해당 교체 파일과 합성 스크립트가 같은 음원인지는 확인되지 않았습니다. 합성 스크립트의 출력과 현재 번들 파일을 동일하다고 단정하지 않습니다.
+
 ### Track 01: Travel Memories (기본 내장 트랙)
-* **파일명**: `traveler_memories.wav` (또는 `traveler_memories.ogg`)
+* **파일명**: `traveler_memories.m4a` (AAC, 128 kb/s, 44.1 kHz stereo)
 * **표시 트랙명**: `Travel Memories`
-* **장르 / 스타일**: Calm, warm, nostalgic, light acoustic guitar & ambient piano arpeggio (Cmaj7 $\rightarrow$ Am9 $\rightarrow$ Fmaj7 $\rightarrow$ Gsus4)
-* **길이 및 루프**: 24.0초 무봉제(Seamless) 루프
+* **장르 / 스타일**: 기존 앱에 포함된 Travel Memories 배경음악
+* **길이 및 루프**: 약 2분 58초. 재생 시 반복하며, 영상 길이에 맞춰 음악을 이어 붙입니다.
 * **작곡 및 제작**: Traveler Project Original Synthesis (`tools/generate_soundtrack.py`)
 * **라이선스 & 저작권 포기 선언 (CC0 1.0 Dedication)**:
   * 본 음원은 Traveler 프로젝트에 의해 직접 작곡 및 합성된 오리지널 음원으로서, **Creative Commons Zero v1.0 Universal (CC0 1.0)** 조건에 따라 전세계 저작권 및 인접권을 포기하고 퍼블릭 도메인(Public Domain)으로 기증되었습니다.

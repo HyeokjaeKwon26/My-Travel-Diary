@@ -1,0 +1,154 @@
+# My Travel Diary — Installation & user guide
+
+[← App overview](../README.en.md) · [한국어](USER_GUIDE.md) · **English**
+
+Import a trip, watch it on the map, and save a video. The steps below use the button names shown in the app; some labels currently appear in Korean.
+
+## 1. Install the app
+
+You need an Android phone or tablet running **Android 8.0 or later**. The current version is **1.1.0-rc1 (prerelease)**.
+
+| Device | Installation file |
+| --- | --- |
+| Most recent Android phones and tablets, including Galaxy S23 Ultra | [Recommended APK — ARM64](https://github.com/HyeokjaeKwon26/My-Travel-Diary/releases/download/v1.1.0-rc1/My-Travel-Diary-1.1.0-rc1-arm64.apk) |
+| If the recommended file is incompatible with your device | [Universal APK](https://github.com/HyeokjaeKwon26/My-Travel-Diary/releases/download/v1.1.0-rc1/My-Travel-Diary-1.1.0-rc1.apk) |
+
+An APK is an Android app installation file. Download **one of these files**, not both.
+
+1. Open the download link on your phone.
+2. Open the downloaded file. If Android asks you to allow installation from that browser or file app, follow its prompts.
+3. When installation finishes, open **My Travel Diary**.
+
+If you already use My Travel Diary, **open the new APK to update without uninstalling**. Uninstalling removes trips stored in the app. The 3D edition remains a separate app.
+
+## 2. Try the demo without personal data
+
+Tap **+ New Travel Story → Try Grand Canyon • illustrative route** to see a 2D map and an animated car without importing a personal Timeline file.
+
+The demo route was created to show the features. It is not a real traveler's GPS track or a route for road navigation.
+
+## 3. Create your own trip
+
+Prepare a **JSON file exported from Google Maps Timeline** and the **photos from that trip on your phone**. The app imports existing journey records; photos alone do not create a new travel route.
+
+<a id="timeline-export"></a>
+
+### A. Save your location history as JSON
+
+First, check the trip dates under **Google Maps → profile picture → Your Timeline**. Export from the phone that holds those records.
+
+1. Open your phone's **Settings** app.
+2. Select **Location → Location services → Timeline**.
+3. Choose **Export Timeline data**, then **Continue**.
+4. Pick a folder you will recognize, such as **Downloads**, and save.
+5. Wait for export to finish. The **`.json` file** is what you will select in the app; do not edit it or split it by travel date.
+
+These steps follow [Google's Android Timeline export guide](https://support.google.com/maps/answer/6258979?co=GENIE.Platform%3DAndroid&hl=en). If your menus differ, consult that guide or search for `Timeline` in your phone settings.
+
+**If you get stuck**
+
+- **No export option:** Update Google Maps and check that this device holds the history. Timeline is unavailable on Android Go.
+- **No records for the trip dates:** Check the account and phone used during the trip. This app cannot recover unrecorded or deleted routes from photos alone. You can try the demo without a personal history file.
+- **Backup is on, but there is no file:** Enabling Timeline backup does not create the JSON file you need to select. Use **Export Timeline data** above.
+- **Can I use Google Takeout on a computer?** For your first trip, use the phone export steps above. Import needs a JSON file containing actual journey records, not a ZIP archive or a screenshot of the map.
+
+### B. Prepare your trip photos
+
+You do not need a separate photo folder or ZIP file. **Keep the original trip photos on the phone where you will use the app.** Photos visible in Google Photos or another service may be stored only in the cloud; download those to the device first.
+
+If the new-trip screen shows **Photos Not Linked**, tap **Enable** and allow photo access. If Android offers access to selected photos only, include the trip photos you want to use. Under **Partial Photo Access**, tap **Change** to allow more photos. The app links accessible photos using capture times and location information. Photos forwarded through messaging apps can lose or change that information, so originals work best.
+
+### C. Create a trip from your files
+
+1. Tap **+ New Travel Story** on the home screen.
+2. When asked, allow access to the photos you want to include. If you allow only selected photos, only those will be available.
+3. Tap **Choose Timeline JSON File**, open **Downloads** or the folder where you saved the export, and select the **`.json` file**.
+4. Enter a name under **Trip Title (Optional)**, such as `Autumn in New England`.
+5. Tap **Select dates**, select your first and last travel days on the calendar, and tap **Use dates**.
+6. Tap **Reconstruct Travel Story**. Progress and estimated time remaining appear while the trip is prepared. The time needed depends on the amount of data and your device.
+
+<img src="screenshots-modern/date-picker.png" width="280" alt="Calendar date-range picker with a Use dates button above the Android navigation area." />
+
+*Example date-selection screen. Calendar language and date formatting may depend on device settings.*
+
+## 4. Play your journey
+
+Open a trip card and tap **▶ inside the map**.
+
+Controls fade away after about three seconds without interaction during playback. **Tap the map once to show them again**; the trip keeps playing. Controls stay visible while paused or while you hold the seek bar. Seeking during playback resumes from the chosen position; seeking while paused keeps it paused. Wide landscape screens use a single row of controls. Accessibility settings may extend the time controls remain visible.
+
+| What you want to do | Control |
+| --- | --- |
+| Pause or resume | Play/pause button |
+| Start again | Circular arrow button |
+| Jump to a scene | Move the seek bar |
+| Check playback time | Read `elapsed / total` beside or above the seek bar |
+| Play slower or faster | `1×` speed button |
+| Turn music on or off | Music-note button |
+| See a larger map | Fullscreen button on the playback controls; rotate for landscape |
+| Change map options | Gear beside the trip title: **Map settings** |
+
+North stays at the top while the map follows the current location. The scale adjusts automatically to show the route, so pinch-to-zoom is not needed. The actual date and `Day N` stay visible during playback.
+
+When a photo taken during travel appears, the route and character briefly pause, then continue. Photos keep their original proportions.
+
+## 5. Personalize photos and organize trips
+
+**Feature a favorite photo:** Tap a photo in the diary and choose **Use as Representative Photo**. Your manual choices take priority over automatic selection.
+
+**Refresh automatic selection:** Use **사진 다시 고르기** (“Choose photos again”) near the top of the trip and confirm. Manually selected representative photos are kept. Normally, the app reuses saved selections instead of analyzing every photo each time you open a trip. Older trips may need one preparation pass after updating.
+
+New gallery photos are not automatically imported into an existing trip. “Choose photos again” works with photos already linked to that trip.
+
+**Sort your trips:** On the home screen, choose name, creation order, or travel date in the sorting menu. Use the adjacent ascending/descending button to reverse the order.
+
+**방문 기록 N회** on a trip card means “N visit records,” including repeated visits to the same place. **인근** means “nearby”: the name comes from a region near the recorded coordinates, not a confirmed visit to that exact city or attraction.
+
+## 6. Save and share a video
+
+1. Tap **▶ to the right of the trip title** to open **Export Travel Video**.
+2. Choose a length: **Short Story** for a brief summary, **Standard Story** for highlights, or **Full Story** for more detail. Each option shows an estimated video duration.
+3. Choose **Portrait 9:16** or **Landscape 16:9**.
+4. Choose **720p / 1080p** and whether to include background music. Start with Standard Story and 720p. Devices that cannot support 1080p export may fall back to 720p.
+5. Tap **Create Travel Video** and wait for it to finish.
+6. Use **Play Preview** to check it, then **Save Video** to save to your gallery or **Share** to share it.
+
+The finished MP4 is a separate video file. You can watch it in fullscreen or landscape inside the app. Rotating your screen does not change the video's encoded aspect ratio; to turn a portrait video into a landscape video, select landscape and create it again.
+
+The privacy option generalizes place names. It does not hide routes, map labels, or addresses visible inside photos. Check the preview before sharing.
+
+## 7. Back up and restore trips
+
+Tap **▶ beside the trip title → Back up this journey** to save a backup. To restore it, choose **Restore** on the home screen and select that file.
+
+**Backups do not contain original photos.** They store trip records and photo references. Keep original photos and Timeline files separately. Backup is not a tool for moving photos to another phone. Before uninstalling the app, back up important journeys and save any finished videos you want to keep.
+
+## Questions and troubleshooting
+
+### Will photos remain in the trip after I delete them?
+
+The app saves photo selections, not archival copies of the images. Deleting a gallery original makes that photo unavailable to the trip. An MP4 already saved with **Save Video** remains playable without the original photos.
+
+### A photo is missing
+
+Check photo permissions, whether the original is still on your phone, and the trip dates. If you granted access to only selected photos, allow access to the missing ones too. If automatic selection misses a favorite, choose it manually as a representative photo.
+
+### Part of the map or video looks less detailed
+
+New areas need internet access for detailed maps. Open the trip on Wi-Fi and check the map settings using the gear beside the title. Street detail is off by default. Enable Internet street detail in Map settings to load the visible map over Wi-Fi or mobile data. No terrain data is downloaded.
+
+Video creation uses detailed maps already prepared on the phone. Where detail is missing or has been removed from the cache, the basic map may appear. There is no feature to download all detailed maps for the entire trip at once.
+
+### The route is dotted or does not match the road
+
+Missing location records are connected with estimated dotted lines. This is a travel-memory app, not navigation or an exact road-route reconstruction tool. Small character movements are artistic effects.
+
+### Playback or video creation is slow
+
+Try 720p and a shorter video, or turn off internet street detail in map settings. Long trips and large photo collections take more time to prepare. This is a prerelease; sustained playback performance has not been verified on every device.
+
+If the problem continues, [send feedback](https://github.com/HyeokjaeKwon26/My-Travel-Diary/issues) with **your device name, app version, and steps to reproduce it**. Hide home addresses or personal photos you do not want to make public before attaching screenshots.
+
+---
+
+[App overview](../README.en.md) · [Downloads](https://github.com/HyeokjaeKwon26/My-Travel-Diary/releases) · [Disclaimer](../DISCLAIMER.md#english) · [Privacy](PRIVACY.md) · [Developer guide](DEVELOPMENT.md)

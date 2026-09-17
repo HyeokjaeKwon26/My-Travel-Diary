@@ -1,6 +1,8 @@
 package com.traveler.feature.trip
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
@@ -48,6 +51,7 @@ fun TravelDiaryScreen(
     onNavigateBack: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val photoPreparation by viewModel.photoPreparation.collectAsState()
     val focusedLocation by viewModel.focusedLocation.collectAsState()
     val selectedPhoto by viewModel.selectedPhoto.collectAsState()
     val editingSegment by viewModel.editingSegment.collectAsState()
@@ -55,6 +59,11 @@ fun TravelDiaryScreen(
 
     var viewingGalleryPhotos by remember { mutableStateOf<List<MediaItem>?>(null) }
     var isExportVideoOpen by remember { mutableStateOf(false) }
+    var fullscreen by androidx.compose.runtime.saveable.rememberSaveable { mutableStateOf(false) }
+    var showRefreshConfirmation by remember { mutableStateOf(false) }
+    androidx.activity.compose.BackHandler(fullscreen) { fullscreen = false }
+    com.traveler.feature.map.PlaybackFullscreenEffect(fullscreen)
+    var showMapOptions by remember { mutableStateOf(false) }
 
     LaunchedEffect(tripId) {
         viewModel.loadTrip(tripId)
@@ -62,7 +71,7 @@ fun TravelDiaryScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            if (!fullscreen) TopAppBar(
                 title = {
                     val title = (uiState as? TripDetailUiState.Success)?.trip?.title ?: "Travel Diary"
                     Text(title, fontWeight = FontWeight.Bold, maxLines = 1)
@@ -74,6 +83,10 @@ fun TravelDiaryScreen(
                 },
                 actions = {
                     if (uiState is TripDetailUiState.Success) {
+                        TextButton(onClick = { showRefreshConfirmation = true }) { Text("사진 다시 고르기", fontSize = 11.sp) }
+                        IconButton(onClick = { showMapOptions = true }) {
+                            Icon(Icons.Default.Settings, contentDescription = "Map settings")
+                        }
                         IconButton(onClick = { isExportVideoOpen = true }) {
                             Icon(Icons.Default.PlayArrow, contentDescription = "Export Video", tint = MaterialTheme.colorScheme.primary)
                         }
@@ -93,7 +106,10 @@ fun TravelDiaryScreen(
             when (val state = uiState) {
                 is TripDetailUiState.Loading -> {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator()
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            CircularProgressIndicator()
+                            Text(photoPreparation, Modifier.padding(16.dp))
+                        }
                     }
                 }
                 is TripDetailUiState.Error -> {
@@ -133,21 +149,25 @@ fun TravelDiaryScreen(
                         }
                     }
 
-                    Column(modifier = Modifier.fillMaxSize()) {
+                    AdaptiveDiaryLayout(fullscreen = fullscreen, map = {
                         // 1. Offline Vector Map & Cinematic Playback Header
                         TravelMapView(
                             visits = allVisits,
                             segments = allSegments,
                             photos = allPhotos,
                             focusedLocation = focusedLocation,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(230.dp)
+                            tripStartDateIso = trip.startDateIso,
+                            photoSelections = trip.memorySnapshot?.selections,
+                            fullscreen = fullscreen,
+                            onToggleFullscreen = { fullscreen = !fullscreen },
+                            showMapOptions = showMapOptions,
+                            onDismissMapOptions = { showMapOptions = false },
+                            modifier = Modifier.fillMaxSize()
                         )
-
+                    }, diary = {
                         // 2. Chronological Diary Timeline List
                         LazyColumn(
-                            modifier = Modifier.fillMaxSize(),
+                            modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
                             contentPadding = PaddingValues(16.dp),
                             verticalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
@@ -166,6 +186,7 @@ fun TravelDiaryScreen(
                                     when (item) {
                                         is TripDayItem.VisitItem -> {
                                             VisitCard(
+                                                routeOverview = if (item.visit.id == allVisits.maxByOrNull { it.endTimestampEpochMs }?.id && isHomeVisit(item.visit)) TravelMapRenderModel(allVisits, allSegments) else null,
                                                 visit = item.visit,
                                                 photos = item.photos,
                                                 onCardClick = { viewModel.focusLocation(item.visit.location) },
@@ -252,8 +273,16 @@ fun TravelDiaryScreen(
                                 }
                             }
                         }
-                    }
+                    })
                 }
+            }
+
+            if (showRefreshConfirmation) {
+                AlertDialog(onDismissRequest = { showRefreshConfirmation = false },
+                    title = { Text("사진 다시 고르기") },
+                    text = { Text("사진을 다시 분석해 자동 선택을 갱신합니다. 직접 지정한 대표 사진은 유지되며, 사진 수에 따라 시간이 걸릴 수 있습니다.") },
+                    confirmButton = { TextButton(onClick = { showRefreshConfirmation = false; viewModel.refreshMemories() }) { Text("다시 고르기") } },
+                    dismissButton = { TextButton(onClick = { showRefreshConfirmation = false }) { Text("취소") } })
             }
 
             // Fullscreen Immersive Photo Detail Dialog
@@ -294,7 +323,8 @@ fun TravelDiaryScreen(
                 val renderModel = TravelMapRenderModel(
                     visits = visits,
                     segments = segments,
-                    photos = photos
+                    photos = photos,
+                    photoSelections = successTrip.memorySnapshot?.selections
                 )
                 com.traveler.feature.video.ui.ExportVideoDialog(
                     trip = successTrip,
@@ -342,61 +372,54 @@ fun TravelDiaryScreen(
 
 @Composable
 private fun TripSummaryHeader(trip: Trip) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceAround,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            val distKm = String.format(java.util.Locale.US, "%.1f", trip.totalDistanceMeters / 1000.0)
-            SummaryMetric(icon = "🛣️", value = "$distKm km", label = "Total Distance")
-            SummaryMetric(icon = "📷", value = "${trip.totalMediaCount}", label = "Captured Media")
-            SummaryMetric(icon = "🗓️", value = "${trip.days.size} Days", label = "Duration")
+    val distKm = String.format(java.util.Locale.US, "%.1f", trip.totalDistanceMeters / 1000.0)
+    val metrics = listOf(Triple("🛣️", "$distKm km", "Total Distance"),
+        Triple("📷", "${trip.totalMediaCount}", "Captured Media"),
+        Triple("🗓️", "${trip.days.size} Days", "Duration"))
+    val fontScale = androidx.compose.ui.platform.LocalDensity.current.fontScale
+    Card(Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)) {
+        BoxWithConstraints(Modifier.fillMaxWidth().padding(16.dp)) {
+            if (maxWidth.value / fontScale < 290) {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    metrics.forEach { (icon, value, label) ->
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                            Text(icon, fontSize = 20.sp)
+                            Column {
+                                Text(value, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                                Text(label, fontSize = 11.sp, color = MaterialTheme.colorScheme.onPrimaryContainer)
+                            }
+                        }
+                    }
+                }
+            } else Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                metrics.forEach { (icon, value, label) ->
+                    Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(icon, fontSize = 20.sp)
+                        Text(value, fontWeight = FontWeight.Bold, fontSize = 16.sp, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+                        Text(label, fontSize = 11.sp, textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f))
+                    }
+                }
+            }
         }
-    }
-}
-
-@Composable
-private fun SummaryMetric(icon: String, value: String, label: String) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = icon, fontSize = 20.sp)
-        Text(text = value, fontWeight = FontWeight.Bold, fontSize = 16.sp)
-        Text(text = label, fontSize = 11.sp, color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f))
     }
 }
 
 @Composable
 private fun DayHeader(day: TripDay) {
     val distKm = String.format(java.util.Locale.US, "%.1f", day.totalDistanceMeters / 1000.0)
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = "Day ${day.dayIndex} · ${day.dateIso}",
-            fontWeight = FontWeight.ExtraBold,
-            fontSize = 18.sp,
-            color = MaterialTheme.colorScheme.primary
-        )
-        Text(
-            text = "$distKm km · ${day.photoCount} photos",
-            fontSize = 12.sp,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
+    Column(Modifier.fillMaxWidth().padding(vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Text("Day ${day.dayIndex} · ${day.dateIso}", fontWeight = FontWeight.ExtraBold,
+            fontSize = 18.sp, color = MaterialTheme.colorScheme.primary)
+        Text("$distKm km · ${day.photoCount} photos", fontSize = 12.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
 
 @Composable
 private fun VisitCard(
     visit: Visit,
+    routeOverview: TravelMapRenderModel? = null,
     photos: List<MediaItem>,
     onCardClick: () -> Unit,
     onEditNameClick: () -> Unit,
@@ -440,6 +463,7 @@ private fun VisitCard(
                     ) {
                         Text(
                             text = displayName,
+                            modifier = Modifier.weight(1f, fill = false),
                             fontWeight = FontWeight.Bold,
                             fontSize = 15.sp
                         )
@@ -456,6 +480,7 @@ private fun VisitCard(
                     }
                 }
 
+            }
                 val visitZone = visit.timezoneId?.let { try { ZoneId.of(it) } catch (_: Exception) { null } }
                 val timeSpanText = if (visitZone != null) {
                     val startTime = TimeUtils.formatTime(Instant.ofEpochMilli(visit.startTimestampEpochMs), visitZone)
@@ -472,9 +497,14 @@ private fun VisitCard(
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-            }
 
-            if (photos.isNotEmpty()) {
+            if (routeOverview != null) {
+                Spacer(Modifier.height(12.dp))
+                TripRouteOverview(routeOverview)
+                if (photos.isNotEmpty()) TextButton(onClick = { onViewAllClick?.invoke(photos) ?: onPhotoClick(photos.first()) }) {
+                    Text("사진 ${photos.size}장 보기")
+                }
+            } else if (photos.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(12.dp))
                 PhotoVisualHierarchy(photos = photos, onPhotoClick = onPhotoClick, onViewAllClick = onViewAllClick)
             }
@@ -482,6 +512,7 @@ private fun VisitCard(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun MovementCard(
     segment: MovementSegment,
@@ -528,10 +559,10 @@ private fun MovementCard(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
-            Row(
+            FlowRow(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 // Transport Mode Badge (Clickable for override)
                 Row(
@@ -796,25 +827,25 @@ fun FullscreenPhotoDialog(
     }
     var showTechDetails by remember(initialShowTechDetails) { mutableStateOf(initialShowTechDetails) }
 
+    val configuration = androidx.compose.ui.platform.LocalConfiguration.current
+    val hostView = androidx.compose.ui.platform.LocalView.current
+    val hostInsets = remember(configuration, hostView) {
+        androidx.core.view.ViewCompat.getRootWindowInsets(hostView)?.getInsets(
+            androidx.core.view.WindowInsetsCompat.Type.systemBars() or
+                androidx.core.view.WindowInsetsCompat.Type.displayCutout())
+    }
+    val hostSafeArea = WindowInsets(hostInsets?.left ?: 0, hostInsets?.top ?: 0,
+        hostInsets?.right ?: 0, hostInsets?.bottom ?: 0)
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false)
+        properties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)
     ) {
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color(0xFF090D16))
+                .windowInsetsPadding(WindowInsets.safeDrawing.union(hostSafeArea))
         ) {
-            // Main Image
-            AsyncImage(
-                model = photo.contentUriString,
-                contentDescription = photo.fileName,
-                contentScale = ContentScale.Fit,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clickable(onClick = onDismiss)
-            )
-
             // Top App Bar
             Row(
                 modifier = Modifier
@@ -842,11 +873,20 @@ fun FullscreenPhotoDialog(
                 }
             }
 
+            // Main Image
+            AsyncImage(
+                model = photo.contentUriString,
+                contentDescription = photo.fileName,
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .fillMaxWidth().weight(1f)
+                    .clickable(onClick = onDismiss)
+            )
+
             // Bottom Info Overlay / Expandable Panel
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .align(Alignment.BottomCenter)
                     .background(Color.Black.copy(alpha = 0.75f))
                     .padding(16.dp)
             ) {
@@ -866,6 +906,9 @@ fun FullscreenPhotoDialog(
                     }
                 }
 
+                Column(Modifier.fillMaxWidth()
+                    .heightIn(max = (configuration.screenHeightDp * .22f).coerceAtLeast(64f).dp)
+                    .verticalScroll(rememberScrollState())) {
                 Text(
                     text = captureTimeStr,
                     color = Color.White,
@@ -905,6 +948,8 @@ fun FullscreenPhotoDialog(
                     }
                 }
 
+                }
+
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Button(
@@ -913,7 +958,7 @@ fun FullscreenPhotoDialog(
                         containerColor = if (photo.isRepresentative) Color(0xFFF59E0B) else Color(0xFF334155)
                     ),
                     shape = RoundedCornerShape(8.dp),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
                 ) {
                     Text(
                         text = if (photo.isRepresentative) "★ Representative Memory" else "☆ Use as Representative Photo",

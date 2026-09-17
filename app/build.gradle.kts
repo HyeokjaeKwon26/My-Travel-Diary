@@ -1,8 +1,14 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.serialization")
     id("com.google.devtools.ksp")
+}
+
+val localSigning = Properties().apply {
+    rootProject.file("keystore.properties").takeIf { it.isFile }?.inputStream()?.use { load(it) }
 }
 
 android {
@@ -13,8 +19,10 @@ android {
         applicationId = "com.traveler"
         minSdk = 26
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0.0"
+        // Optional device-specific distribution APK; CI/default keeps all supported ABIs.
+        providers.gradleProperty("targetAbi").orNull?.let { ndk.abiFilters.add(it) }
+        versionCode = 2
+        versionName = "1.1.0-rc1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -22,9 +30,20 @@ android {
         }
     }
 
+    signingConfigs {
+        if(localSigning.containsKey("storeFile")) create("production") {
+            storeFile = file(localSigning.getProperty("storeFile"))
+            storePassword = localSigning.getProperty("storePassword")
+            keyAlias = localSigning.getProperty("keyAlias")
+            keyPassword = localSigning.getProperty("keyPassword")
+        }
+    }
+    androidResources { noCompress += "m4a" }
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+            signingConfig = signingConfigs.findByName("production")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -106,6 +125,8 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
+
+
     // Room Persistence
     val roomVersion = "2.6.1"
     implementation("androidx.room:room-runtime:$roomVersion")
@@ -113,6 +134,8 @@ dependencies {
     ksp("androidx.room:room-compiler:$roomVersion")
     testImplementation("androidx.room:room-testing:$roomVersion")
     androidTestImplementation("androidx.room:room-testing:$roomVersion")
+
+    implementation("com.google.mlkit:image-labeling:17.0.9")
 
     // Media & EXIF
     implementation("androidx.exifinterface:exifinterface:1.3.7")
@@ -123,6 +146,8 @@ dependencies {
         exclude(group = "com.github.luben", module = "zstd-jni")
     }
     implementation("com.github.luben:zstd-jni:1.5.7-11@aar")
+    // TimeShape uses SLF4J 1.7. Supply its no-op binding for a complete R8 graph.
+    implementation("org.slf4j:slf4j-nop:1.7.30")
 
     // Debugging & Tooling
     debugImplementation("androidx.compose.ui:ui-tooling")

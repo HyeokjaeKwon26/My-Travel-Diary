@@ -126,7 +126,7 @@ class TravelViewportCalculator(
                 val centerWx = (centerUnwrappedLng + 180.0) / 360.0
                 val centerWy = WebMercator.project(playbackCameraCenter.latitude, 0.0).y
 
-                val dynamicSpanY = maxOf(0.001, playbackCameraSpanDegrees / 180.0)
+                val dynamicSpanY = maxOf(0.000001, playbackCameraSpanDegrees / 180.0)
                 val canvasAspect = contentW / contentH
                 val dynamicSpanX = dynamicSpanY * canvasAspect
 
@@ -136,8 +136,8 @@ class TravelViewportCalculator(
                 val viewportMinY = centerWy - spanY / 2.0
                 return Quad(viewportMinX, viewportMinY, spanX, spanY)
             } else {
-                val rawSpanX = maxOf(0.002, ref.maxX - ref.minX)
-                val rawSpanY = maxOf(0.002, ref.maxY - ref.minY)
+                val rawSpanX = maxOf(0.00002, ref.maxX - ref.minX)
+                val rawSpanY = maxOf(0.00002, ref.maxY - ref.minY)
 
                 val centerX = (ref.minX + ref.maxX) / 2.0
                 val centerY = (ref.minY + ref.maxY) / 2.0

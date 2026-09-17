@@ -50,7 +50,7 @@ object TravelVideoExporter {
         renderModel: TravelMapRenderModel,
         profile: StoryDurationProfile
     ): TravelStoryTimeline {
-        val totalDays = trip.days.size
+        val totalDays = runCatching { java.time.temporal.ChronoUnit.DAYS.between(LocalDate.parse(trip.startDateIso), LocalDate.parse(trip.endDateIso)).toInt() + 1 }.getOrDefault(trip.days.size).coerceAtLeast(1)
         val totalDistanceKm = String.format(java.util.Locale.US, "%.1f km", trip.totalDistanceMeters / 1000.0)
         val memoriesCount = "${trip.totalMediaCount} Memories"
 
@@ -63,7 +63,7 @@ object TravelVideoExporter {
 
         val endCard = StoryEndCard(
             title = trip.title,
-            totalDaysStr = "$totalDays Days",
+            totalDaysStr = "$totalDays ${if (totalDays == 1) "Day" else "Days"}",
             totalDistanceStr = totalDistanceKm,
             memoriesCountStr = memoriesCount,
             durationSeconds = 2.5f
@@ -86,24 +86,27 @@ object TravelVideoExporter {
         renderModel: TravelMapRenderModel,
         profile: StoryDurationProfile,
         includeMusic: Boolean = true,
+        resolution: VideoResolution = VideoResolution.FULL_HD,
         generalizeHomeAddress: Boolean = true,
         encoderRef: ((TravelVideoEncoder) -> Unit)? = null,
         onProgress: ((Float) -> Unit)? = null
     ): File? = withContext(Dispatchers.IO) {
-        val timeline = buildExportTimeline(trip, renderModel, profile)
+        val safeModel = if (generalizeHomeAddress) com.traveler.feature.video.ExportPrivacy.generalize(renderModel) else renderModel
+        val safeTrip = if (generalizeHomeAddress) trip.copy(title = com.traveler.feature.video.ExportPrivacy.title(trip.title)) else trip
+        val timeline = buildExportTimeline(safeTrip, safeModel, profile)
+        val frozenMaps=ExportMapSnapshot.create(context) { onProgress?.invoke(it*.03f) }
+        try {
+        com.traveler.feature.map.renderer.RegionalBasemapCache.ensureLoaded(context.applicationContext)
         val basemapStream = context.assets.open("basemap_world.json")
         val renderer = TravelVideoRenderer(
             context = context,
             basemapStream = basemapStream,
-            renderModel = renderModel,
+            renderModel = safeModel,
             timeline = timeline,
-            generalizeHomeAddress = generalizeHomeAddress
+            generalizeHomeAddress = generalizeHomeAddress,
+            streetCacheDirectory = frozenMaps,
+            tripStartDateIso = trip.startDateIso
         )
-        // Load regional 10m basemap for video export detail
-        try {
-            context.assets.open("basemap_regional.json").use { renderer.loadRegionalBasemap(it) }
-        } catch (_: Exception) { /* 10m asset not available — OK */ }
-
         val tempDir = getExportTempDir(context)
         val sanitizedTitle = trip.title.replace(Regex("[^a-zA-Z0-9_-]"), "_")
         val tempFile = File(tempDir, "temp_export_${sanitizedTitle}_${System.currentTimeMillis()}.mp4")
@@ -115,13 +118,14 @@ object TravelVideoExporter {
         )
         encoderRef?.invoke(encoder)
 
+        val actualResolution=resolution.supportedOrFallback()
         val success = encoder.encodeToMp4(
             outputFile = tempFile,
-            width = 1080,
-            height = 1920,
+            width = actualResolution.width,
+            height = actualResolution.height,
             fps = 30,
             includeMusic = includeMusic,
-            onProgress = onProgress
+            onProgress = { onProgress?.invoke(.03f+it*.96f) }
         )
 
         if (success && tempFile.exists() && tempFile.length() > 1024) {
@@ -146,11 +150,13 @@ object TravelVideoExporter {
                 throw IllegalStateException("Video export timing validation failed: intended $intendedDurationSeconds s, but container reported $actualDurationSeconds s")
             }
 
+            onProgress?.invoke(1f)
             tempFile
         } else {
             if (tempFile.exists()) tempFile.delete()
             null
         }
+        } finally { ExportMapSnapshot.clear(frozenMaps) }
     }
 
     /**
@@ -182,10 +188,10 @@ object TravelVideoExporter {
             MediaStore.Video.Media.EXTERNAL_CONTENT_URI
         }
 
-        val uri = resolver.insert(collection, contentValues) ?: return@withContext null
-
+        var uri: Uri? = null
         try {
-            resolver.openOutputStream(uri)?.use { out ->
+            uri = resolver.insert(collection, contentValues) ?: return@withContext null
+            (resolver.openOutputStream(uri) ?: error("Cannot open gallery output")).use { out ->
                 FileInputStream(videoFile).use { input ->
                     input.copyTo(out)
                 }
@@ -200,7 +206,8 @@ object TravelVideoExporter {
 
             uri
         } catch (e: Exception) {
-            resolver.delete(uri, null, null)
+            uri?.let { runCatching { resolver.delete(it, null, null) } }
+            if (e is kotlinx.coroutines.CancellationException) throw e
             null
         }
     }

@@ -11,6 +11,7 @@ import com.traveler.domain.repository.TripRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -29,8 +30,9 @@ class TripRepositoryImpl(
     }
 
     override fun getAllTrips(): Flow<List<Trip>> {
-        return database.tripDao().getAllTripsFlow().map { entities ->
-            entities.map { entity ->
+        return database.tripDao().getTripCardRowsFlow().map { rows ->
+            rows.groupBy { it.trip.id }.values.map { tripRows ->
+                val entity = tripRows.first().trip
                 Trip(
                     id = entity.id,
                     title = entity.title,
@@ -41,10 +43,23 @@ class TripRepositoryImpl(
                     countries = parseJsonStringList(entity.countriesJson),
                     days = emptyList(), // Days loaded on detail screen
                     totalMediaCount = entity.totalMediaCount,
-                    createdAtEpochMs = entity.createdAtEpochMs
+                    createdAtEpochMs = entity.createdAtEpochMs,
+                    visitSummary = TripVisitSummary.from(tripRows.mapNotNull { row ->
+                        row.summaryVisitId?.let { id -> TripVisitLabel(
+                            id, row.summaryPlaceName,
+                            location = if (row.summaryLatitude != null && row.summaryLongitude != null &&
+                                row.summaryLatitude in -90.0..90.0 && row.summaryLongitude in -180.0..180.0)
+                                GeoPoint(row.summaryLatitude, row.summaryLongitude) else null,
+                            isUserOverride = row.summaryUserOverride,
+                            startEpochMs = row.summaryStart,
+                            durationMs = ((row.summaryEnd ?: 0).toDouble() - (row.summaryStart ?: 0).toDouble())
+                                .coerceIn(0.0, 86_400_000.0).toLong(),
+                            timezoneId = row.summaryTimezone, photoCount = row.summaryPhotoCount
+                        ) }
+                    })
                 )
             }
-        }
+        }.flowOn(Dispatchers.Default)
     }
 
     override suspend fun getTripById(tripId: String): Trip? = withContext(Dispatchers.IO) {
@@ -67,7 +82,7 @@ class TripRepositoryImpl(
                 placeName = effectivePlaceName,
                 placeAddress = v.placeAddress,
                 placeId = v.placeId,
-                location = GeoPoint(v.latitude, v.longitude),
+                location = GeoPoint(v.latitude, v.longitude, v.altitudeMeters),
                 startTimestampEpochMs = v.startTimestampEpochMs,
                 endTimestampEpochMs = v.endTimestampEpochMs,
                 confidence = v.confidence,
@@ -96,8 +111,10 @@ class TripRepositoryImpl(
                 id = s.sourceId,
                 startTimestampEpochMs = s.startTimestampEpochMs,
                 endTimestampEpochMs = s.endTimestampEpochMs,
-                startPoint = GeoPoint(s.startLat, s.startLng),
-                endPoint = GeoPoint(s.endLat, s.endLng),
+                startPoint = GeoPoint(s.startLat, s.startLng, s.startAltitudeMeters),
+                endPoint = GeoPoint(s.endLat, s.endLng, s.endAltitudeMeters),
+                rawPoints = if (s.rawPointsJson.isBlank()) emptyList() else
+                    json.decodeFromString<List<LocationPoint>>(s.rawPointsJson),
                 simplifiedPoints = simplified,
                 distanceMeters = s.distanceMeters,
                 durationMillis = s.durationMillis,
@@ -143,6 +160,7 @@ class TripRepositoryImpl(
 
         // Reconstruct TripDays using persisted timezones without blocking on TimeShape
         val days = reconstructDays(visits, segments, confidentMediaItems, tripEntity.startDateIso, tripEntity.endDateIso)
+        val visitPhotoCounts = mediaItems.mapNotNull { it.matchedVisitId }.groupingBy { it }.eachCount()
 
         Trip(
             id = tripEntity.id,
@@ -155,7 +173,11 @@ class TripRepositoryImpl(
             days = days,
             uncertainDateMedia = uncertainDateMediaList,
             totalMediaCount = tripEntity.totalMediaCount,
-            createdAtEpochMs = tripEntity.createdAtEpochMs
+            createdAtEpochMs = tripEntity.createdAtEpochMs,
+            visitSummary = TripVisitSummary.from(visits.sortedWith(
+                compareBy<Visit> { it.startTimestampEpochMs }.thenBy { it.id }
+            ).map { TripVisitLabel(it.id, it.placeName, it.location, it.isUserOverride,
+                it.startTimestampEpochMs, it.durationMillis, it.timezoneId, visitPhotoCounts[it.id] ?: 0) })
         )
     }
 
@@ -196,7 +218,8 @@ class TripRepositoryImpl(
                             endTimestampEpochMs = visit.endTimestampEpochMs,
                             confidence = visit.confidence,
                             isUserOverride = visit.isUserOverride,
-                            timezoneId = visit.timezoneId
+                            timezoneId = visit.timezoneId,
+                            altitudeMeters = visit.location.altitudeMeters
                         )
                         for (photo in item.photos) {
                             val photoWithVisit = photo.copy(
@@ -227,7 +250,10 @@ class TripRepositoryImpl(
                             isUserOverride = seg.isUserOverride,
                             startTimezoneId = seg.startTimezoneId,
                             endTimezoneId = seg.endTimezoneId,
-                            geometryProvenance = seg.geometryProvenance.name
+                            geometryProvenance = seg.geometryProvenance.name,
+                            startAltitudeMeters = seg.startPoint.altitudeMeters,
+                            endAltitudeMeters = seg.endPoint.altitudeMeters,
+                            rawPointsJson = if (seg.rawPoints.isEmpty()) "" else json.encodeToString(seg.rawPoints)
                         )
                         for (photo in item.photos) {
                             val photoWithSeg = photo.copy(

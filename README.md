@@ -273,6 +273,14 @@ app/build/outputs/apk/debug/app-debug.apk
 
 ---
 
+## 개발자 · Developer
+
+**Hyeokjae Kwon, M.D., Ph.D.**
+
+[Website](https://hyeokjaekwon26.github.io/) · [GitHub](https://github.com/HyeokjaeKwon26)
+
+---
+
 ## 📄 License
 
 This project is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**.  

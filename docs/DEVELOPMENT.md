@@ -1,6 +1,6 @@
 # Development — modern 2D edition
 
-The original application ID remains `com.traveler`. Version 1.1.0-rc1 (code 2) ports the shared diary, photo, playback and export improvements from My Travel Diary 3D RC12 while rendering maps and vehicles in 2D Canvas. Original source history and AGPL licensing remain intact.
+The current New edition is 2.1.0 (code 2), application ID `com.traveler.next`. It installs alongside the original `com.traveler` application and updates New 2.0.0 with the same dedicated signing key. Maps and vehicles use 2D Canvas. Original source history and AGPL licensing remain intact. See [2.1.0 features](ENHANCEMENTS_2_1.md) and [migration](SIDE_BY_SIDE_MIGRATION.md).
 
 ## Build and validate
 
@@ -12,7 +12,7 @@ Use JDK 17, Android SDK 36 and the Gradle wrapper:
 ./gradlew.bat assembleRelease
 ```
 
-Local release signing is configured through ignored `keystore.properties`. The original v1.0.0 APK was signed with the workstation's Android debug certificate. Updates must retain that exact certificate to install over the original; an unrelated new production key cannot update existing installs. Release code is optimized and non-debuggable even though this compatibility certificate originated as a debug key. Never commit private keys or credentials.
+Local release signing is configured through ignored `keystore.properties` and uses the New edition's dedicated production key. It is not compatible with the original application's certificate. Keep the original app installed while migrating records and photos; never uninstall it to work around a signature mismatch. Release code is optimized and non-debuggable. Never commit private keys or credentials.
 
 Database version 5 migrates additively to 6. Original routes, visits, media references, and manual overrides must survive. Saved photo analysis and selections live outside the evictable cache, not as copies of photos. Archives use `MyTravelDiary`, version 1; restore also accepts the 3D edition's version-1 archive. Local photo permissions and original image files do not transfer through an archive.
 
@@ -27,3 +27,7 @@ Database version 5 migrates additively to 6. Original routes, visits, media refe
 Keep the [Korean README](../README.md), [English README](../README.en.md), user guides, [privacy notice](PRIVACY.md), and [Disclaimer](../DISCLAIMER.md) aligned with actual behavior. Use screenshots from the current 2D app and label illustrative trips. Older technical documents and the [legacy README](LEGACY_README.md) describe previous releases, not current behavior or performance guarantees.
 
 Release validation and practical limits: [modernization status](MODERNIZATION_STATUS.md).
+
+Current source update: [optional media storage and portable ZIP backups](PORTABLE_MEMORIES.md).
+
+In-app update implementation and release metadata generation: [IN_APP_UPDATES.md](IN_APP_UPDATES.md).

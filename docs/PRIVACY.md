@@ -1,5 +1,7 @@
 # Privacy and data handling / 개인정보 안내
 
+> Current source update / 현재 소스 변경: optional app-owned media copies and photo-inclusive ZIP backups are now supported. Statements below about backups without photos refer to the legacy JSON format and previously published APKs. Copies and ZIPs contain original media and metadata; ZIPs are not encrypted. 휴지통에서는 보관본을 유지하며 여행을 영구 삭제하거나 앱을 제거하면 앱 내부 보관본도 삭제됩니다. [Details / 상세 안내](PORTABLE_MEMORIES.md)
+
 ## 한국어
 
 - 타임라인 파일, 사진 분석, 여행 재생과 영상 생성은 기기에서 처리합니다. 타임라인 파일이나 사진 원본을 업로드하는 서비스는 없습니다.
@@ -23,3 +25,7 @@ Saved photo choices are not copies of original images. Gallery deletion or permi
 Generalizing place names does not hide routes, map labels or information inside images. Review exports before sharing. You choose recipients in the Android sharesheet.
 
 Map attribution and policy: [OpenStreetMap copyright](https://www.openstreetmap.org/copyright) · [Tile usage policy](https://operations.osmfoundation.org/policies/tiles/).
+
+## 앱 내 업데이트 (New 2.1.0)
+
+앱 실행 또는 백그라운드에서 다시 열 때 기본으로 공식 GitHub의 공개 배포 정보를 확인하며, 업데이트 창에서 자동 확인을 끌 수 있습니다. GitHub에는 HTTP 연결에 필요한 IP 주소 등의 일반 연결 정보가 전달됩니다. 여행 기록·위치·사진·개인 식별자는 요청에 첨부하지 않습니다. APK는 사용자가 다운로드를 누르거나 선택형 Wi-Fi 자동 받기를 켰을 때 받아 앱의 캐시에 보관하며, 설치는 Android 확인 화면에서 승인해야 합니다. [동작과 배포 조건](IN_APP_UPDATES.md)
